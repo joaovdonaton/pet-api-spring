@@ -1,5 +1,7 @@
 package br.pucpr.petapi.security;
 
+import br.pucpr.petapi.petTypes.PetType;
+import br.pucpr.petapi.petTypes.PetTypeRepository;
 import br.pucpr.petapi.roles.Role;
 import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
@@ -17,12 +19,14 @@ import java.util.List;
 public class DatabaseBootstrap implements CommandLineRunner {
     private RolesRepository rolesRepository;
     private UsersRepository usersRepository;
+    private PetTypeRepository petTypeRepository;
     private PasswordEncoder encoder;
     private Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PasswordEncoder encoder) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
+        this.petTypeRepository = petTypeRepository;
         this.encoder = encoder;
     }
 
@@ -84,11 +88,25 @@ public class DatabaseBootstrap implements CommandLineRunner {
     }
 
     @Transactional
+    private void createPetTypes() {
+        logger.info("Creating pet types...");
+
+        var types = List.of("dog", "cat");
+
+        for(var type: types){
+            petTypeRepository.save(new PetType(type));
+        }
+
+        logger.info("Pet Types successfully created!");
+    }
+
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         logger.info("Loading initial data...");
         createRoles();
         createUsers();
+        createPetTypes();
 
         logger.info("Initial data loading complete!");
     }
