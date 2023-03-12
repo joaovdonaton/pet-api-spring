@@ -1,8 +1,10 @@
 package br.pucpr.petapi.security;
 
-import br.pucpr.petapi.security.dto.UserInfoDTO;
+import br.pucpr.petapi.users.dto.UserInfoDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonDeserializer;
+import io.jsonwebtoken.jackson.io.JacksonSerializer;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Map;
 
 @Component
@@ -44,5 +49,22 @@ public class JWT {
                 .map(r -> new SimpleGrantedAuthority("ROLE_"+r)).toList();
 
         return UsernamePasswordAuthenticationToken.authenticated(user, user.getId(), authorities);
+    }
+
+    public static Date toDate(LocalDate date){
+        return Date.from(date.atStartOfDay(ZoneOffset.UTC).toInstant());
+    }
+
+    public String createToken(UserInfoDTO u){
+        final var now = LocalDate.now();
+        return Jwts.builder()
+                .signWith(Keys.hmacShaKeyFor(settings.getSecret().getBytes()))
+                .serializeToJsonWith(new JacksonSerializer<>())
+                .setIssuedAt(toDate(now))
+                .setExpiration(toDate(now.plusDays(10)))
+                .setIssuer(settings.getIssuer())
+                .setSubject(u.getId().toString())
+                .addClaims(Map.of("user", u))
+                .compact();
     }
 }

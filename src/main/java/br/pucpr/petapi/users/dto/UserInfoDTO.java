@@ -1,4 +1,4 @@
-package br.pucpr.petapi.security.dto;
+package br.pucpr.petapi.users.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

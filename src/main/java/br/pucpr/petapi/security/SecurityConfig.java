@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage())).and()
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/export/**").permitAll()
                         .anyRequest().authenticated())
