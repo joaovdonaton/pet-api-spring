@@ -1,6 +1,6 @@
-package br.pucpr.petapi.error;
+package br.pucpr.petapi.lib.error;
 
-import br.pucpr.petapi.error.dto.ApiErrorDTO;
+import br.pucpr.petapi.lib.error.dto.ApiErrorDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

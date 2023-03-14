@@ -1,4 +1,4 @@
-package br.pucpr.petapi.error;
+package br.pucpr.petapi.lib.error;
 
 public class UsernameAlreadyExistsException extends RuntimeException {
     public UsernameAlreadyExistsException(String message) {

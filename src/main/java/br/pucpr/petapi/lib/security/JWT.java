@@ -1,4 +1,4 @@
-package br.pucpr.petapi.security;
+package br.pucpr.petapi.lib.security;
 
 import br.pucpr.petapi.users.dto.UserInfoDTO;
 import io.jsonwebtoken.Jwts;

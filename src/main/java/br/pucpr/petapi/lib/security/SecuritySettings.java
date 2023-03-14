@@ -1,4 +1,4 @@
-package br.pucpr.petapi.security;
+package br.pucpr.petapi.lib.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

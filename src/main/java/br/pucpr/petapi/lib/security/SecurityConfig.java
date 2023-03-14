@@ -1,4 +1,4 @@
-package br.pucpr.petapi.security;
+package br.pucpr.petapi.lib.security;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;

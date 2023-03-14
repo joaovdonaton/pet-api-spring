@@ -1,4 +1,4 @@
-package br.pucpr.petapi.error.dto;
+package br.pucpr.petapi.lib.error.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

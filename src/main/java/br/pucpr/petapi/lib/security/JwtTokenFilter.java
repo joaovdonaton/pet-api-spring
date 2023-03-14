@@ -1,4 +1,4 @@
-package br.pucpr.petapi.security;
+package br.pucpr.petapi.lib.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

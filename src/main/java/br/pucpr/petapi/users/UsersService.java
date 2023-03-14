@@ -1,9 +1,9 @@
 package br.pucpr.petapi.users;
 
-import br.pucpr.petapi.error.InvalidCredentialsException;
-import br.pucpr.petapi.error.UsernameAlreadyExistsException;
+import br.pucpr.petapi.lib.error.InvalidCredentialsException;
+import br.pucpr.petapi.lib.error.UsernameAlreadyExistsException;
 import br.pucpr.petapi.roles.RolesService;
-import br.pucpr.petapi.security.JWT;
+import br.pucpr.petapi.lib.security.JWT;
 import br.pucpr.petapi.users.dto.UserCredentialsDTO;
 import br.pucpr.petapi.users.dto.UserInfoDTO;
 import br.pucpr.petapi.users.dto.UserRegisterDTO;
