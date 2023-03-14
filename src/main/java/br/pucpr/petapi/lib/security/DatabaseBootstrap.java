@@ -1,5 +1,7 @@
 package br.pucpr.petapi.lib.security;
 
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
+import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
 import br.pucpr.petapi.roles.Role;
@@ -7,6 +9,7 @@ import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -22,12 +25,14 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private PetTypeRepository petTypeRepository;
     private PasswordEncoder encoder;
     private Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
+    private LocationUtils locationUtils;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
         this.encoder = encoder;
+        this.locationUtils = locationUtils;
     }
 
     @Transactional
@@ -107,6 +112,8 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createRoles();
         createUsers();
         createPetTypes();
+
+        locationUtils.getCPFData("80250-220");
 
         logger.info("Initial data loading complete!");
     }

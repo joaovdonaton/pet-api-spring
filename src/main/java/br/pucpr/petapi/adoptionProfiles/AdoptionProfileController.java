@@ -1,5 +1,8 @@
 package br.pucpr.petapi.adoptionProfiles;
 
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,9 +17,11 @@ public class AdoptionProfileController {
     public AdoptionProfileController(AdoptionProfileService service) {
         this.service = service;
     }
-//
-//    @PostMapping("/")
-//    public AdoptionProfile create(@RequestBody @Valid AdoptionProfile adoptionProfile){
-//        return service.createAdoptionProfile();
-//    }
+
+    @PostMapping("/")
+    @RolesAllowed("USER")
+    @SecurityRequirement(name = "auth")
+    public AdoptionProfileRegister create(@RequestBody @Valid AdoptionProfileRegister adoptionProfileRegister){
+        return adoptionProfileRegister;
+    }
 }
