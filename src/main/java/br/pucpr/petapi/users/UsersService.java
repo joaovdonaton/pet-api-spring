@@ -1,6 +1,7 @@
 package br.pucpr.petapi.users;
 
 import br.pucpr.petapi.lib.error.InvalidCredentialsException;
+import br.pucpr.petapi.lib.error.InvalidUUIDException;
 import br.pucpr.petapi.lib.error.UsernameAlreadyExistsException;
 import br.pucpr.petapi.roles.RolesService;
 import br.pucpr.petapi.lib.security.JWT;
@@ -10,6 +11,8 @@ import br.pucpr.petapi.users.dto.UserRegisterDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UsersService {
@@ -24,6 +27,10 @@ public class UsersService {
         this.encoder = encoder;
         this.rolesService = rolesService;
         this.jwt = jwt;
+    }
+
+    public User findById(UUID id){
+        return repository.findById(id).orElseThrow(() -> new InvalidUUIDException("User id [" + id + "] not found"));
     }
 
     @Transactional

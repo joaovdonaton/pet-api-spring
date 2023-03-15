@@ -1,6 +1,5 @@
 package br.pucpr.petapi.lib.security;
 
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
@@ -9,7 +8,6 @@ import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -113,7 +111,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createUsers();
         createPetTypes();
 
-        locationUtils.getCPFData("80250-220");
+        locationUtils.getCEPData("80250-220");
 
         logger.info("Initial data loading complete!");
     }

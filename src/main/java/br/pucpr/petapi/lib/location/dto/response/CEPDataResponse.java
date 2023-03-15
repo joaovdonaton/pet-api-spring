@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class CPFDataResponse {
+public class CEPDataResponse {
     private String cep;
     private String logradouro;
     private String complemento;

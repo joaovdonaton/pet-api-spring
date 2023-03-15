@@ -38,4 +38,18 @@ public class AdoptionProfile {
     private Set<UUID> viewedPetIds;
     @ElementCollection
     private Set<String> preferredPetTypes;
+
+    public AdoptionProfile(User user, String cep, String description, boolean newPetOwner, String state, String city, String district, BigDecimal latitude, BigDecimal longitude, Set<UUID> viewedPetIds, Set<String> preferredPetTypes) {
+        this.user = user;
+        this.cep = cep;
+        this.description = description;
+        this.newPetOwner = newPetOwner;
+        this.state = state;
+        this.city = city;
+        this.district = district;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.viewedPetIds = viewedPetIds;
+        this.preferredPetTypes = preferredPetTypes;
+    }
 }

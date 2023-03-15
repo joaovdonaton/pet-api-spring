@@ -1,6 +1,6 @@
 package br.pucpr.petapi.lib.location;
 
-import br.pucpr.petapi.lib.location.dto.response.CPFDataResponse;
+import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,15 +16,15 @@ public class LocationUtils {
         this.settings = settings;
     }
 
-    public CPFDataResponse getCPFData(String cpf){
+    public CEPDataResponse getCEPData(String cpf){
         var template = new RestTemplate();
-        return template.exchange(getCPFRequestUrl(cpf),
+        return template.exchange(getCEPRequestUrl(cpf),
                 GET,
                 HttpEntity.EMPTY,
-                CPFDataResponse.class).getBody();
+                CEPDataResponse.class).getBody();
     }
 
-    private String getCPFRequestUrl(String cpf){
+    private String getCEPRequestUrl(String cpf){
         return settings.getCepApiUrl().replace(PLACEHOLDER_CEP, cpf);
     }
 }

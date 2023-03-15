@@ -22,6 +22,6 @@ public class AdoptionProfileController {
     @RolesAllowed("USER")
     @SecurityRequirement(name = "auth")
     public AdoptionProfileRegister create(@RequestBody @Valid AdoptionProfileRegister adoptionProfileRegister){
-        return adoptionProfileRegister;
+        return service.createAdoptionProfile(adoptionProfileRegister);
     }
 }
