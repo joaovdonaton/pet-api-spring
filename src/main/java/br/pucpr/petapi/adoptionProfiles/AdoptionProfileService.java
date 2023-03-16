@@ -1,6 +1,7 @@
 package br.pucpr.petapi.adoptionProfiles;
 
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
+import br.pucpr.petapi.lib.error.AdoptionProfileAlreadyExists;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersService;
@@ -26,9 +27,20 @@ public class AdoptionProfileService {
     public AdoptionProfile createAdoptionProfile(AdoptionProfileRegister adoptionProfileRegister){
         UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = usersService.findById(currentUserInfo.getId());
-        var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
 
-        var coordinates = locationUtils.getCoordinates("Avenida visconde de guarapuava 3806 curitiba parana");
+        if(currentUser.getAdoptionProfile() != null)
+            throw new AdoptionProfileAlreadyExists(currentUser.getUsername() + " already has an adoption profile.");
+
+        // preencher dados de localização
+        var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
+        var coordinates = locationUtils.getCoordinates(
+                String.join(
+                        " ",
+                        cepData.getBairro(),
+                        cepData.getLocalidade(),
+                        cepData.getUf()
+                        )
+        );
 
         AdoptionProfile ap = new AdoptionProfile(
             currentUser,

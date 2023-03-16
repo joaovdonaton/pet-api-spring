@@ -46,4 +46,24 @@ public class ExceptionHandlers {
     public ResponseEntity<ApiErrorDTO> invalidCredentials(InvalidCredentialsException e){
         return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), UNAUTHORIZED);
     }
+
+    @ExceptionHandler(AdoptionProfileAlreadyExists.class)
+    public ResponseEntity<ApiErrorDTO> profileAlreadyExists(AdoptionProfileAlreadyExists e){
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidAddressException.class)
+    public ResponseEntity<ApiErrorDTO> invalidAddress(InvalidAddressException e){
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCEPException.class)
+    public ResponseEntity<ApiErrorDTO> invalidCEP(InvalidCEPException e){
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ThirdPartyApiFailureException.class)
+    public ResponseEntity<ApiErrorDTO> apiFailure(ThirdPartyApiFailureException e){
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
+    }
 }

@@ -1,14 +1,10 @@
 package br.pucpr.petapi.adoptionProfiles.dto;
 
 import br.pucpr.petapi.adoptionProfiles.validation.ValidCEP;
-import br.pucpr.petapi.users.User;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
-import java.math.BigDecimal;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 public class AdoptionProfileRegister {

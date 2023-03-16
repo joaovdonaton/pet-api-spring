@@ -1,6 +1,7 @@
 package br.pucpr.petapi.adoptionProfiles;
 
 import br.pucpr.petapi.users.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class AdoptionProfile {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     private String cep;
     private String description;
