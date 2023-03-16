@@ -2,7 +2,10 @@ package br.pucpr.petapi.lib.location;
 
 import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import br.pucpr.petapi.lib.location.dto.response.GeocodingResponse;
+import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.lib.security.ApiKeysSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +19,7 @@ public class LocationUtils {
     private final String PLACEHOLDER_CEP = "00000000";
     private final String PLACEHOLDER_ADDRESS = "ADDRESS";
     private final String PLACEHOLDER_KEY = "KEY";
+    private final Logger logger = LoggerFactory.getLogger(LocationUtils.class);
 
     public LocationUtils(LocationSettings locationSettings, ApiKeysSettings apiKeysSettings) {
         this.locationSettings = locationSettings;
@@ -23,26 +27,32 @@ public class LocationUtils {
     }
 
     public CEPDataResponse getCEPData(String cpf){
+        String url = getCEPRequestUrl(cpf);
+        logger.info("Fetching CEP data at: " + url);
         var template = new RestTemplate();
-        return template.exchange(getCEPRequestUrl(cpf),
+        return template.exchange(url,
                 GET,
                 HttpEntity.EMPTY,
                 CEPDataResponse.class).getBody();
     }
 
-    public void getCoordinates(String address){
+    public CoordinatesDTO getCoordinates(String address){
+        String url = getCoordinatesRequestUrl(address);
+
+        logger.info("Fetching coordinate data at: " + url);
+
         var template = new RestTemplate();
-        System.out.println(getCoordinatesRequestUrl(address));
-        var a = template.exchange(getCoordinatesRequestUrl(address),
+        var a = template.exchange(url,
                 GET,
                 HttpEntity.EMPTY,
                 GeocodingResponse.class);
 
-        a.getBody().getResults().stream().forEach(v -> {
-            var b = v.getGeometry().getLocation();
-            System.out.println(b.getLat());
-            System.out.println(b.getLng());
-        });
+        if(a.getStatusCode().equals(GeocodingResponse.NO_RESULTS_STATUS)){
+            logger.error("No results returned for coordinate data");
+            throw new RuntimeException(""); // mudar dps
+        }
+
+        return a.getBody().getResults().get(0).getGeometry().getLocation();
     }
 
     private String getCEPRequestUrl(String cpf){

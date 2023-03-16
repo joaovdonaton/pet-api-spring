@@ -17,12 +17,6 @@ public class AdoptionProfileRegister {
     private String cep;
     private String description;
     private boolean newPetOwner;
-    @Column(precision = 15, scale = 12)
-    private BigDecimal latitude;
-    @Column(precision = 15, scale = 12)
-    private BigDecimal longitude;
-    @ElementCollection
-    private Set<UUID> viewedPetIds;
     @ElementCollection
     private Set<String> preferredPetTypes;
 }

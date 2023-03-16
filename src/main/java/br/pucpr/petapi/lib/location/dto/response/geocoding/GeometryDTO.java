@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class GeometryDTO {
-    private LocationDTO location;
+    private CoordinatesDTO location;
 }

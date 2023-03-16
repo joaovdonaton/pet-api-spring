@@ -113,8 +113,6 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createUsers();
         createPetTypes();
 
-        locationUtils.getCEPData("80250-220");
-
         logger.info("Initial data loading complete!");
     }
 }

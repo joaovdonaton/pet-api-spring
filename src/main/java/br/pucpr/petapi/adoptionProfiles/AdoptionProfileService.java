@@ -8,34 +8,42 @@ import br.pucpr.petapi.users.dto.UserInfoDTO;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Set;
+
 @Service
 public class AdoptionProfileService {
     private final UsersService usersService;
     private final LocationUtils locationUtils;
+    private final AdoptionProfileRepository repository;
 
-    public AdoptionProfileService(UsersService usersService, LocationUtils locationUtils) {
+    public AdoptionProfileService(UsersService usersService, LocationUtils locationUtils, AdoptionProfileRepository repository) {
         this.usersService = usersService;
         this.locationUtils = locationUtils;
+        this.repository = repository;
     }
 
-    public AdoptionProfileRegister createAdoptionProfile(AdoptionProfileRegister adoptionProfileRegister){
+    public AdoptionProfile createAdoptionProfile(AdoptionProfileRegister adoptionProfileRegister){
         UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = usersService.findById(currentUserInfo.getId());
         var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
 
-        locationUtils.getCoordinates("Avenida visconde de guarapuava 3806 curitiba parana");
+        var coordinates = locationUtils.getCoordinates("Avenida visconde de guarapuava 3806 curitiba parana");
 
-//        AdoptionProfile ap = new AdoptionProfile(
-//            currentUser,
-//                adoptionProfileRegister.getCep(),
-//                adoptionProfileRegister.getDescription(),
-//                adoptionProfileRegister.isNewPetOwner(),
-//                cepData.getUf(),
-//                cepData.getLocalidade(),
-//                cepData.getBairro(),
-//
-//        );
+        AdoptionProfile ap = new AdoptionProfile(
+            currentUser,
+                adoptionProfileRegister.getCep(),
+                adoptionProfileRegister.getDescription(),
+                adoptionProfileRegister.isNewPetOwner(),
+                cepData.getUf(),
+                cepData.getLocalidade(),
+                cepData.getBairro(),
+                new BigDecimal(coordinates.getLat()),
+                new BigDecimal(coordinates.getLng()),
+                Set.of(),
+                adoptionProfileRegister.getPreferredPetTypes()
+        );
 
-        return null;
+        return repository.save(ap);
     }
 }
