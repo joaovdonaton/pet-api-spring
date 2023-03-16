@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ###
-./src/main/resources/apikeys.properties
+src/main/resources/apikeys.properties
