@@ -23,16 +23,18 @@ public class AdoptionProfileService {
         User currentUser = usersService.findById(currentUserInfo.getId());
         var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
 
-        AdoptionProfile ap = new AdoptionProfile(
-            currentUser,
-                adoptionProfileRegister.getCep(),
-                adoptionProfileRegister.getDescription(),
-                adoptionProfileRegister.isNewPetOwner(),
-                cepData.getUf(),
-                cepData.getLocalidade(),
-                cepData.getBairro(),
+        locationUtils.getCoordinates("Avenida visconde de guarapuava 3806 curitiba parana");
 
-        );
+//        AdoptionProfile ap = new AdoptionProfile(
+//            currentUser,
+//                adoptionProfileRegister.getCep(),
+//                adoptionProfileRegister.getDescription(),
+//                adoptionProfileRegister.isNewPetOwner(),
+//                cepData.getUf(),
+//                cepData.getLocalidade(),
+//                cepData.getBairro(),
+//
+//        );
 
         return null;
     }

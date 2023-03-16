@@ -84,7 +84,9 @@ public class DatabaseBootstrap implements CommandLineRunner {
                 usersRepository.save(u);
                 logger.info("Test user '"+usernames.get(i)+"' created");
             }
-            logger.info("Test user '"+usernames.get(i)+"' already exists");
+            else {
+                logger.info("Test user '" + usernames.get(i) + "' already exists");
+            }
         }
 
         logger.info("Users successfully created!");
@@ -97,7 +99,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         var types = List.of("dog", "cat");
 
         for(var type: types){
-            petTypeRepository.save(new PetType(type));
+            if(!petTypeRepository.existsByName(type)) petTypeRepository.save(new PetType(type));
         }
 
         logger.info("Pet Types successfully created!");

@@ -14,6 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LocationSettings {
-    private String googleApiKey;
+    private String googleGoecodingUrl;
     private String cepApiUrl;
 }
