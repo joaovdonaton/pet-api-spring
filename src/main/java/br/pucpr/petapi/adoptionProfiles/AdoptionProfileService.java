@@ -1,6 +1,7 @@
 package br.pucpr.petapi.adoptionProfiles;
 
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegisterDTO;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
@@ -26,7 +27,7 @@ public class AdoptionProfileService {
         this.repository = repository;
     }
 
-    public AdoptionProfile createAdoptionProfile(AdoptionProfileRegister adoptionProfileRegister){
+    public AdoptionProfile createAdoptionProfile(AdoptionProfileRegisterDTO adoptionProfileRegisterDTO){
         UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = usersService.findById(currentUserInfo.getId());
 
@@ -35,7 +36,7 @@ public class AdoptionProfileService {
                     HttpStatus.BAD_REQUEST);
 
         // preencher dados de localização
-        var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
+        var cepData = locationUtils.getCEPData(adoptionProfileRegisterDTO.getCep());
         var coordinates = locationUtils.getCoordinates(
                 String.join(
                         " ",
@@ -47,16 +48,16 @@ public class AdoptionProfileService {
 
         AdoptionProfile ap = new AdoptionProfile(
             currentUser,
-                adoptionProfileRegister.getCep(),
-                adoptionProfileRegister.getDescription(),
-                adoptionProfileRegister.isNewPetOwner(),
+                adoptionProfileRegisterDTO.getCep(),
+                adoptionProfileRegisterDTO.getDescription(),
+                adoptionProfileRegisterDTO.isNewPetOwner(),
                 cepData.getUf(),
                 cepData.getLocalidade(),
                 cepData.getBairro(),
                 new BigDecimal(coordinates.getLat()),
                 new BigDecimal(coordinates.getLng()),
                 Set.of(),
-                adoptionProfileRegister.getPreferredPetTypes()
+                adoptionProfileRegisterDTO.getPreferredPetTypes()
         );
 
         return repository.save(ap);
@@ -72,5 +73,49 @@ public class AdoptionProfileService {
         if(ap == null) throw new ResourceDoesNotExistException("User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
 
         repository.delete(ap);
+    }
+
+    public void updateAdoptionProfile(AdoptionProfileUpdateDTO adoptionProfileUpdateDTO) {
+        UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = usersService.findById(currentUserInfo.getId());
+
+        AdoptionProfile ap = currentUser.getAdoptionProfile();
+
+        if(ap == null)
+            throw new ResourceDoesNotExistException(currentUser.getUsername() + " does not have an adoption profile.",
+                    HttpStatus.NOT_FOUND);
+
+        System.out.println(adoptionProfileUpdateDTO);
+//
+//        if(adoptionProfileUpdateDTO.getCep() != null)
+//
+//        // preencher dados de localização
+//        var cepData = locationUtils.getCEPData(adoptionProfileUpdateDTO.getCep());
+//        var coordinates = locationUtils.getCoordinates(
+//                String.join(
+//                        " ",
+//                        cepData.getBairro(),
+//                        cepData.getLocalidade(),
+//                        cepData.getUf()
+//                )
+//        );
+//
+//
+//        ap = new AdoptionProfile(
+//                currentUser,
+//                adoptionProfileUpdateDTO.getCep(),
+//                adoptionProfileUpdateDTO.getDescription(),
+//                adoptionProfileUpdateDTO.isNewPetOwner(),
+//                cepData.getUf(),
+//                cepData.getLocalidade(),
+//                cepData.getBairro(),
+//                new BigDecimal(coordinates.getLat()),
+//                new BigDecimal(coordinates.getLng()),
+//                Set.of(),
+//                adoptionProfileUpdateDTO.getPreferredPetTypes()
+//        );
+//
+//        return repository.save(ap);
+
     }
 }

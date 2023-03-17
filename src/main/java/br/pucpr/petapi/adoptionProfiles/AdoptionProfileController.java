@@ -1,6 +1,7 @@
 package br.pucpr.petapi.adoptionProfiles;
 
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegisterDTO;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -20,8 +21,8 @@ public class AdoptionProfileController {
     @RolesAllowed("USER")
     @ResponseStatus(HttpStatus.CREATED)
     @SecurityRequirement(name = "auth")
-    public AdoptionProfile create(@RequestBody @Valid AdoptionProfileRegister adoptionProfileRegister){
-        return service.createAdoptionProfile(adoptionProfileRegister);
+    public AdoptionProfile create(@RequestBody @Valid AdoptionProfileRegisterDTO adoptionProfileRegisterDTO){
+        return service.createAdoptionProfile(adoptionProfileRegisterDTO);
     }
 
     @DeleteMapping("/")
@@ -30,5 +31,13 @@ public class AdoptionProfileController {
     @SecurityRequirement(name = "auth")
     public void delete(){
         service.deleteAdoptionProfile();
+    }
+
+    @PatchMapping("/")
+    @RolesAllowed("USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "auth")
+    public void update(@RequestBody @Valid AdoptionProfileUpdateDTO adoptionProfileUpdateDTO){
+        service.updateAdoptionProfile(adoptionProfileUpdateDTO);
     }
 }

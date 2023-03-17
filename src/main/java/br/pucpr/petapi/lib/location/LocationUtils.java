@@ -7,12 +7,10 @@ import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import br.pucpr.petapi.lib.location.dto.response.GeocodingResponse;
 import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.lib.security.ApiKeysSettings;
-import org.hibernate.validator.constraints.br.CPF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
