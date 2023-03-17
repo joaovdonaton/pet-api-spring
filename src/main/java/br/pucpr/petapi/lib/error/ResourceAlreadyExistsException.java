@@ -1,9 +1,10 @@
 package br.pucpr.petapi.lib.error;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-public class AdoptionProfileAlreadyExistsException extends ApiException{
-    public AdoptionProfileAlreadyExistsException(String message, HttpStatusCode status) {
+public class ResourceAlreadyExistsException extends ApiException{
+    public ResourceAlreadyExistsException(String message, HttpStatus status) {
         super(message, status);
     }
 }

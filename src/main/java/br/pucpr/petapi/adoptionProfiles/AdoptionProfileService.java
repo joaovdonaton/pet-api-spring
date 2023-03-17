@@ -1,11 +1,13 @@
 package br.pucpr.petapi.adoptionProfiles;
 
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegister;
-import br.pucpr.petapi.lib.error.AdoptionProfileAlreadyExists;
+import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersService;
 import br.pucpr.petapi.users.dto.UserInfoDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,8 @@ public class AdoptionProfileService {
         User currentUser = usersService.findById(currentUserInfo.getId());
 
         if(currentUser.getAdoptionProfile() != null)
-            throw new AdoptionProfileAlreadyExists(currentUser.getUsername() + " already has an adoption profile.");
+            throw new ResourceAlreadyExistsException(currentUser.getUsername() + " already has an adoption profile.",
+                    HttpStatus.BAD_REQUEST);
 
         // preencher dados de localização
         var cepData = locationUtils.getCEPData(adoptionProfileRegister.getCep());
@@ -65,6 +68,9 @@ public class AdoptionProfileService {
         User currentUser = usersService.findById(currentUserInfo.getId());
 
         AdoptionProfile ap = currentUser.getAdoptionProfile();
+
+        if(ap == null) throw new ResourceDoesNotExistException("User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
+
         repository.delete(ap);
     }
 }

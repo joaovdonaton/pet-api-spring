@@ -1,7 +1,9 @@
 package br.pucpr.petapi.lib.error;
 
-public class ThirdPartyApiFailureException extends RuntimeException{
-    public ThirdPartyApiFailureException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class ThirdPartyApiFailureException extends ApiException{
+    public ThirdPartyApiFailureException(String message, HttpStatus status) {
+        super(message, status);
     }
 }

@@ -11,6 +11,8 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,12 +43,13 @@ public class LocationUtils {
 
         if(res == null){
             logger.error("Error while fetching CEP data!");
-            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api");
+            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(res.getCep() == null){
             logger.error("No results found for CEP: " + cep);
-            throw new InvalidCEPException("Could not retrieve CEP data: Invalid CEP");
+            throw new InvalidCEPException("Could not retrieve CEP data: Invalid CEP", HttpStatus.BAD_REQUEST);
         }
 
         return res;
@@ -65,12 +68,13 @@ public class LocationUtils {
 
         if(res.getBody() == null){
             logger.error("Error while fetching coordinate data!");
-            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api");
+            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(res.getStatusCode().toString().equals(GeocodingResponse.NO_RESULTS_STATUS)){
             logger.error("No results returned for coordinate data");
-            throw new InvalidAddressException("Could not get coordinates for this address.");
+            throw new InvalidAddressException("Could not get coordinates for this address.", HttpStatus.BAD_REQUEST);
         }
 
         return res.getBody().getResults().get(0).getGeometry().getLocation();

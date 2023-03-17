@@ -1,11 +1,9 @@
 package br.pucpr.petapi.lib.error;
 
-public class InvalidCredentialsException extends RuntimeException {
-    public InvalidCredentialsException(String message) {
-        super(message);
-    }
+import org.springframework.http.HttpStatus;
 
-    public InvalidCredentialsException() {
-        super("Invalid Credentials");
+public class InvalidCredentialsException extends ApiException {
+    public InvalidCredentialsException(String message, HttpStatus status) {
+        super(message, status);
     }
 }

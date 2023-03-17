@@ -32,38 +32,13 @@ public class ExceptionHandlers {
         return new ResponseEntity<>(new ApiErrorDTO(msg), BAD_REQUEST);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorDTO> usernameAlreadyExistsException(UsernameAlreadyExistsException e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ApiErrorDTO> usernameNotFound(UsernameNotFoundException e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiErrorDTO> apiException(ApiException e){
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), e.getStatus());
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiErrorDTO> invalidCredentials(InvalidCredentialsException e){
         return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(AdoptionProfileAlreadyExists.class)
-    public ResponseEntity<ApiErrorDTO> profileAlreadyExists(AdoptionProfileAlreadyExists e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidAddressException.class)
-    public ResponseEntity<ApiErrorDTO> invalidAddress(InvalidAddressException e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidCEPException.class)
-    public ResponseEntity<ApiErrorDTO> invalidCEP(InvalidCEPException e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ThirdPartyApiFailureException.class)
-    public ResponseEntity<ApiErrorDTO> apiFailure(ThirdPartyApiFailureException e){
-        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage()), BAD_REQUEST);
     }
 }

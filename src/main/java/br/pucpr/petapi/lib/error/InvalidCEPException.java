@@ -1,7 +1,9 @@
 package br.pucpr.petapi.lib.error;
 
-public class InvalidCEPException extends RuntimeException{
-    public InvalidCEPException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class InvalidCEPException extends ApiException{
+    public InvalidCEPException(String message, HttpStatus status) {
+        super(message, status);
     }
 }
