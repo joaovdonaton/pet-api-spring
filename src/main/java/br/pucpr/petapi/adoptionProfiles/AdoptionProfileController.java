@@ -5,8 +5,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,5 +22,13 @@ public class AdoptionProfileController {
     @SecurityRequirement(name = "auth")
     public AdoptionProfile create(@RequestBody @Valid AdoptionProfileRegister adoptionProfileRegister){
         return service.createAdoptionProfile(adoptionProfileRegister);
+    }
+
+    @DeleteMapping("/")
+    @RolesAllowed("USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "auth")
+    public void delete(){
+        service.deleteAdoptionProfile();
     }
 }

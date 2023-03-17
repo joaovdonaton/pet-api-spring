@@ -58,4 +58,13 @@ public class AdoptionProfileService {
 
         return repository.save(ap);
     }
+
+    // apagar perfil do usuario atualmente autenticado
+    public void deleteAdoptionProfile() {
+        UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = usersService.findById(currentUserInfo.getId());
+
+        AdoptionProfile ap = currentUser.getAdoptionProfile();
+        repository.delete(ap);
+    }
 }
