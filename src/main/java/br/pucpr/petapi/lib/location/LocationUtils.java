@@ -1,5 +1,6 @@
 package br.pucpr.petapi.lib.location;
 
+import br.pucpr.petapi.adoptionProfiles.validation.CEPValidator;
 import br.pucpr.petapi.lib.error.InvalidAddressException;
 import br.pucpr.petapi.lib.error.InvalidCEPException;
 import br.pucpr.petapi.lib.error.ThirdPartyApiFailureException;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,10 +36,7 @@ public class LocationUtils {
         String url = getCEPRequestUrl(cep);
         logger.info("Fetching CEP data at: " + url);
         var template = new RestTemplate();
-        var res = template.exchange(url,
-                GET,
-                HttpEntity.EMPTY,
-                CEPDataResponse.class).getBody();
+        var res = template.getForEntity(url, CEPDataResponse.class).getBody();
 
         if(res == null){
             logger.error("Error while fetching CEP data!");
@@ -59,10 +58,7 @@ public class LocationUtils {
         logger.info("Fetching coordinate data at: " + url);
 
         var template = new RestTemplate();
-        var res = template.exchange(url,
-                GET,
-                HttpEntity.EMPTY,
-                GeocodingResponse.class);
+        var res = template.getForEntity(url, GeocodingResponse.class);
 
         if(res.getBody() == null){
             logger.error("Error while fetching coordinate data!");
