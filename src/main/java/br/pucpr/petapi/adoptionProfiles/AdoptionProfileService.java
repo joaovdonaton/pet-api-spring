@@ -63,7 +63,6 @@ public class AdoptionProfileService {
         return repository.save(ap);
     }
 
-    // apagar perfil do usuario atualmente autenticado
     public void deleteAdoptionProfile() {
         UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = usersService.findById(currentUserInfo.getId());
@@ -85,37 +84,38 @@ public class AdoptionProfileService {
             throw new ResourceDoesNotExistException(currentUser.getUsername() + " does not have an adoption profile.",
                     HttpStatus.NOT_FOUND);
 
-        System.out.println(adoptionProfileUpdateDTO);
-//
-//        if(adoptionProfileUpdateDTO.getCep() != null)
-//
-//        // preencher dados de localização
-//        var cepData = locationUtils.getCEPData(adoptionProfileUpdateDTO.getCep());
-//        var coordinates = locationUtils.getCoordinates(
-//                String.join(
-//                        " ",
-//                        cepData.getBairro(),
-//                        cepData.getLocalidade(),
-//                        cepData.getUf()
-//                )
-//        );
-//
-//
-//        ap = new AdoptionProfile(
-//                currentUser,
-//                adoptionProfileUpdateDTO.getCep(),
-//                adoptionProfileUpdateDTO.getDescription(),
-//                adoptionProfileUpdateDTO.isNewPetOwner(),
-//                cepData.getUf(),
-//                cepData.getLocalidade(),
-//                cepData.getBairro(),
-//                new BigDecimal(coordinates.getLat()),
-//                new BigDecimal(coordinates.getLng()),
-//                Set.of(),
-//                adoptionProfileUpdateDTO.getPreferredPetTypes()
-//        );
-//
-//        return repository.save(ap);
+        String cep = adoptionProfileUpdateDTO.getCep();
+        if(cep != null){
+            ap.setCep(cep);
 
+            var cepData = locationUtils.getCEPData(cep);
+            var coordinates = locationUtils.getCoordinates(String.join(
+                        " ",
+                        cepData.getBairro(),
+                        cepData.getLocalidade(),
+                        cepData.getUf()
+                ));
+
+            ap.setCity(cepData.getLocalidade());
+            ap.setDistrict(cepData.getBairro());
+            ap.setState(cepData.getUf());
+            ap.setLatitude(new BigDecimal(coordinates.getLat()));
+            ap.setLongitude(new BigDecimal(coordinates.getLng()));
+        }
+
+        String description = adoptionProfileUpdateDTO.getDescription();
+        if(description != null){
+            ap.setDescription(description);
+        }
+
+        boolean newPetOwner = adoptionProfileUpdateDTO.isNewPetOwner();
+        ap.setNewPetOwner(ap.isNewPetOwner() == newPetOwner ? ap.isNewPetOwner() : newPetOwner);
+
+        var preferredPetTypes = adoptionProfileUpdateDTO.getPreferredPetTypes();
+        if(preferredPetTypes != null) {
+            adoptionProfileUpdateDTO.setPreferredPetTypes(preferredPetTypes);
+        }
+
+        repository.save(ap);
     }
 }

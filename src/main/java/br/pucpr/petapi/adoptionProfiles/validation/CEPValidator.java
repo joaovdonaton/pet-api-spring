@@ -9,13 +9,23 @@ import java.util.List;
 
 public class CEPValidator implements ConstraintValidator<ValidCEP, String> {
     private final LocationUtils utils;
+    private boolean nullable;
 
     public CEPValidator(LocationUtils utils) {
         this.utils = utils;
     }
 
     @Override
+    public void initialize(ValidCEP constraintAnnotation) {
+        ConstraintValidator.super.initialize(constraintAnnotation);
+        this.nullable = constraintAnnotation.nullable();
+    }
+
+    @Override
     public boolean isValid(String cpf, ConstraintValidatorContext constraintValidatorContext) {
+        if(nullable && cpf == null) return true;
+        if(!nullable && cpf == null) return false;
+
         if(cpf.length() != 9 && cpf.length() != 8){
             return false;
         }

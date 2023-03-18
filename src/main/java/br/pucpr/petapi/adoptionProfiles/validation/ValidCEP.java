@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CEPValidator.class)
 public @interface ValidCEP {
     String message() default "Invalid CEP.";
+    boolean nullable() default false;
 
     Class<?>[] groups() default {};
 

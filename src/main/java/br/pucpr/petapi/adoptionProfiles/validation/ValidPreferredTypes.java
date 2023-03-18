@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PreferredTypeValidator.class)
 public @interface ValidPreferredTypes {
     String message() default "Invalid PreferredTypes";
+    boolean nullable() default false;
 
     Class<?>[] groups() default {};
 

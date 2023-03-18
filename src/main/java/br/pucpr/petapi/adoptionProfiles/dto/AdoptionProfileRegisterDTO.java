@@ -14,15 +14,16 @@ import java.util.Set;
 public class AdoptionProfileRegisterDTO {
 //    @Length(min = 8, max = 9, message = "Invalid Cep Length (min 8, max 9)")
     @ValidCEP(message = "Invalid CEP format! Valid formats: 000000-00 or 00000000")
+    @NotNull(message = "CEP must not be null")
     private String cep;
     @Length(min = 50, max = 500, message = "Description length must be at least 50 or at max 500")
-    @NotBlank
+    @NotBlank(message = "Description must not be null")
     private String description;
 
-    @NotNull
+    @NotNull(message = "newPetOwner must not be null")
     private boolean newPetOwner;
     @ElementCollection
     @ValidPreferredTypes(message = "Invalid preferredPetTypes")
-    @NotNull
+    @NotNull(message = "preferredPetTypes must not be null")
     private Set<String> preferredPetTypes;
 }

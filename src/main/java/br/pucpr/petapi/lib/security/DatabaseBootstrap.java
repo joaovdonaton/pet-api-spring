@@ -7,6 +7,8 @@ import br.pucpr.petapi.roles.Role;
 import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersRepository;
+import br.pucpr.petapi.users.UsersService;
+import br.pucpr.petapi.users.dto.UserCredentialsDTO;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +26,15 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private PasswordEncoder encoder;
     private Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
     private LocationUtils locationUtils;
+    private UsersService usersService;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
         this.encoder = encoder;
         this.locationUtils = locationUtils;
+        this.usersService = usersService;
     }
 
     @Transactional
@@ -87,6 +91,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
             else {
                 logger.info("Test user '" + usernames.get(i) + "' already exists");
             }
+            logger.info("Token: " + usersService.authenticate(new UserCredentialsDTO(usernames.get(i), passwords.get(i))));
         }
 
         logger.info("Users successfully created!");
