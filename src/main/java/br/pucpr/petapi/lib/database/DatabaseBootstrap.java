@@ -1,8 +1,9 @@
-package br.pucpr.petapi.lib.security;
+package br.pucpr.petapi.lib.database;
 
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
+import br.pucpr.petapi.pets.PetsRepository;
 import br.pucpr.petapi.roles.Role;
 import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
@@ -27,14 +28,16 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
     private LocationUtils locationUtils;
     private UsersService usersService;
+    private PetsRepository petsRepository;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
         this.encoder = encoder;
         this.locationUtils = locationUtils;
         this.usersService = usersService;
+        this.petsRepository = petsRepository;
     }
 
     @Transactional
@@ -111,12 +114,18 @@ public class DatabaseBootstrap implements CommandLineRunner {
     }
 
     @Transactional
+    private void createPets(){
+
+    }
+
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         logger.info("Loading initial data...");
         createRoles();
         createUsers();
         createPetTypes();
+        createPets();
 
         logger.info("Initial data loading complete!");
     }

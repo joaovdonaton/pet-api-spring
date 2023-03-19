@@ -1,6 +1,5 @@
 package br.pucpr.petapi.lib.location;
 
-import br.pucpr.petapi.adoptionProfiles.validation.CEPValidator;
 import br.pucpr.petapi.lib.error.InvalidAddressException;
 import br.pucpr.petapi.lib.error.InvalidCEPException;
 import br.pucpr.petapi.lib.error.ThirdPartyApiFailureException;
@@ -10,13 +9,9 @@ import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.lib.security.ApiKeysSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import static org.springframework.http.HttpMethod.GET;
 
 @Component
 public class LocationUtils {

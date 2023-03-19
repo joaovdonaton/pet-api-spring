@@ -1,6 +1,7 @@
 package br.pucpr.petapi.users;
 
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.pets.Pet;
 import br.pucpr.petapi.roles.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -37,6 +38,10 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private AdoptionProfile adoptionProfile;
+
+    @OneToMany
+    @JoinTable(name = "users_pets", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    private Set<Pet> pets;
 
     public User(String username, String password, String name) {
         this.username = username;
