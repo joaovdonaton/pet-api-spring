@@ -11,6 +11,7 @@ import br.pucpr.petapi.users.dto.UserInfoDTO;
 import br.pucpr.petapi.users.dto.UserRegisterDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,10 @@ public class UsersService {
     public User findById(UUID id){
         return repository.findById(id).orElseThrow(() -> new InvalidUUIDException("User id [" + id + "] not found",
                 HttpStatus.NOT_FOUND));
+    }
+
+    public User findByUsername(String username){
+        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username ["+username+"] not found"));
     }
 
     @Transactional

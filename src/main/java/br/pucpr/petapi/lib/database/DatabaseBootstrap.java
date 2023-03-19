@@ -3,7 +3,10 @@ package br.pucpr.petapi.lib.database;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
+import br.pucpr.petapi.petTypes.PetTypeService;
+import br.pucpr.petapi.pets.Pet;
 import br.pucpr.petapi.pets.PetsRepository;
+import br.pucpr.petapi.pets.PetsService;
 import br.pucpr.petapi.roles.Role;
 import br.pucpr.petapi.roles.RolesRepository;
 import br.pucpr.petapi.users.User;
@@ -17,21 +20,23 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Configuration
 public class DatabaseBootstrap implements CommandLineRunner {
-    private RolesRepository rolesRepository;
-    private UsersRepository usersRepository;
-    private PetTypeRepository petTypeRepository;
-    private PasswordEncoder encoder;
-    private Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
-    private LocationUtils locationUtils;
-    private UsersService usersService;
-    private PetsRepository petsRepository;
-    private BootstrapSettings settings;
+    private final RolesRepository rolesRepository;
+    private final UsersRepository usersRepository;
+    private final PetTypeRepository petTypeRepository;
+    private final PasswordEncoder encoder;
+    private final Logger logger = LoggerFactory.getLogger(DatabaseBootstrap.class);
+    private final LocationUtils locationUtils;
+    private final UsersService usersService;
+    private final PetsRepository petsRepository;
+    private final BootstrapSettings settings;
+    private final PetTypeService petTypeService;
+    private final PetsService petsService;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
@@ -40,6 +45,8 @@ public class DatabaseBootstrap implements CommandLineRunner {
         this.usersService = usersService;
         this.petsRepository = petsRepository;
         this.settings = settings;
+        this.petTypeService = petTypeService;
+        this.petsService = petsService;
     }
 
     @Transactional
@@ -97,7 +104,31 @@ public class DatabaseBootstrap implements CommandLineRunner {
 
     @Transactional
     private void createPets(){
+        logger.info("Creating pets...");
 
+        var petNames = settings.getPetNames();
+        var petNicknames = settings.getPetNicknames();
+        var petAges = settings.getPetAges();
+        var ownerUsernames = settings.getOwnerUsernames();
+        var petTypeNames = settings.getPetAnimalTypes();
+        var defaultDescription = settings.getPetDefaultDescription();
+
+        for(int i = 0; i < petNames.size(); i++){
+            if(petsService.existsByName(petNames.get(i))) {
+                logger.info("Test pet named " + petNames.get(i) + " already exists");
+                continue;
+            }
+            var u = usersService.findByUsername(ownerUsernames.get(i));
+            var pet = new Pet(petNames.get(i), petNicknames.get(i), petAges.get(i), defaultDescription, u
+                    , LocalDateTime.now(),
+                    petTypeService.findPetTypeByName(petTypeNames.get(i)));
+
+            u.addPet(pet);
+
+            petsRepository.save(pet);
+        }
+
+        logger.info("Pets sucessfully created");
     }
 
     @Transactional

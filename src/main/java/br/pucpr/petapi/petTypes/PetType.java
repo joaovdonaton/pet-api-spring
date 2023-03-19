@@ -23,12 +23,7 @@ public class PetType {
     @Column(unique = true)
     private String name;
 
-    @OneToMany
-    @JoinTable(
-            name = "pet_types_pets",
-            joinColumns = @JoinColumn(name = "pet_type_id"),
-            inverseJoinColumns = @JoinColumn(name = "pet_id")
-    )
+    @OneToMany(mappedBy = "petType")
     private Set<Pet> pets;
 
     public PetType(String name) {

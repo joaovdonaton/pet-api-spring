@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import java.util.List;
-import java.util.Set;
 
 @Configuration
 @PropertySource("/bootstrapdata.properties")
@@ -22,5 +21,12 @@ public class BootstrapSettings {
     private List<String> usernames;
     private String defaultPassword;
     private List<String> names;
+    private String petDefaultDescription;
 
+    // esses campos devem todos ter o mesmo tamanho
+    private List<String> petNames;
+    private List<String> petNicknames;
+    private List<Integer> petAges;
+    private List<String> ownerUsernames;
+    private List<String> petAnimalTypes;
 }

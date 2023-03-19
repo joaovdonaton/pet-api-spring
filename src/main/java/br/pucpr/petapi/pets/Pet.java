@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,5 +30,20 @@ public class Pet {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
     @ManyToOne
+//    @JoinTable(
+//            name = "pet_types_pets",
+//            joinColumns = @JoinColumn(name = "pet_type_id"),
+//            inverseJoinColumns = @JoinColumn(name = "pet_id")
+//    )
     private PetType petType;
+
+    public Pet(String name, String nickname, Integer age, String description, User user, LocalDateTime createdAt, PetType petType) {
+        this.name = name;
+        this.nickname = nickname;
+        this.age = age;
+        this.description = description;
+        this.user = user;
+        this.createdAt = createdAt;
+        this.petType = petType;
+    }
 }

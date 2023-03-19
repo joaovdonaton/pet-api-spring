@@ -39,9 +39,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     private AdoptionProfile adoptionProfile;
 
-    @OneToMany
-    @JoinTable(name = "users_pets", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
-    private Set<Pet> pets;
+    @OneToMany(mappedBy = "user")
+//    @JoinTable(name = "users_pets", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    private Set<Pet> pets = new HashSet<>();
 
     public User(String username, String password, String name) {
         this.username = username;
@@ -56,6 +56,12 @@ public class User {
         role.setUsers(users);
 
         roles.add(role);
+    }
+
+    @Transactional
+    public void addPet(Pet pet){
+        pet.setUser(this);
+        pets.add(pet);
     }
 
     public Set<String> getRoleNames(){
