@@ -29,8 +29,9 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private LocationUtils locationUtils;
     private UsersService usersService;
     private PetsRepository petsRepository;
+    private BootstrapSettings settings;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
@@ -38,14 +39,16 @@ public class DatabaseBootstrap implements CommandLineRunner {
         this.locationUtils = locationUtils;
         this.usersService = usersService;
         this.petsRepository = petsRepository;
+        this.settings = settings;
     }
 
     @Transactional
     private void createRoles(){
         logger.info("Creating Roles...");
 
-        if(!rolesRepository.existsByName("USER")) rolesRepository.save(new Role("USER"));
-        if(!rolesRepository.existsByName("ADMIN")) rolesRepository.save(new Role("ADMIN"));
+        for(String roleName: settings.getRoles()){
+            if(!rolesRepository.existsByName(roleName)) rolesRepository.save(new Role(roleName));
+        }
 
         logger.info("Roles successfully created!");
     }
@@ -56,35 +59,16 @@ public class DatabaseBootstrap implements CommandLineRunner {
 
 
         Role USER_ROLE = rolesRepository.findByName("USER");
-        Role ADMIN_ROLE = rolesRepository.findByName("ADMIN");
 
-        var usernames = List.of(
-                "georgie1984",
-                "gustavo2012",
-                "ricardo66",
-                "fumantepassivo",
-                "baratavoadora",
-                "dragaorosa3");
-        var passwords = List.of(
-                "12345678",
-                "12345678",
-                "12345678",
-                "12345678",
-                "12345678",
-                "12345678");
-        var names = List.of(
-                "George F. Richards",
-                "Gustavo Pepe",
-                "Ricardo da Costa",
-                "Pedro Mendonça Arantes",
-                "Emanuelly Rodrigues",
-                "Layla de Souza");
+        var usernames = settings.getUsernames();
+        var password = settings.getDefaultPassword();
+        var names = settings.getNames();
 
         for(int i = 0; i < usernames.size(); i++){
             if(!usersRepository.existsByUsername(usernames.get(i))) {
                 User u = new User(
                         usernames.get(i),
-                        encoder.encode(passwords.get(i)),
+                        encoder.encode(password),
                         names.get(i));
                 u.addRole(USER_ROLE);
 
@@ -94,7 +78,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
             else {
                 logger.info("Test user '" + usernames.get(i) + "' already exists");
             }
-            logger.info("Token: " + usersService.authenticate(new UserCredentialsDTO(usernames.get(i), passwords.get(i))));
+            logger.info("Token: " + usersService.authenticate(new UserCredentialsDTO(usernames.get(i), password)));
         }
 
         logger.info("Users successfully created!");
@@ -104,9 +88,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private void createPetTypes() {
         logger.info("Creating pet types...");
 
-        var types = List.of("dog", "cat");
-
-        for(var type: types){
+        for(var type: settings.getPetTypes()){
             if(!petTypeRepository.existsByName(type)) petTypeRepository.save(new PetType(type));
         }
 
