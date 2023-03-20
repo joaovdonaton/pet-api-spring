@@ -1,5 +1,8 @@
 package br.pucpr.petapi.lib.database;
 
+import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.adoptionProfiles.AdoptionProfileRepository;
+import br.pucpr.petapi.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
@@ -21,6 +24,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 public class DatabaseBootstrap implements CommandLineRunner {
@@ -35,8 +40,10 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private final BootstrapSettings settings;
     private final PetTypeService petTypeService;
     private final PetsService petsService;
+    private final AdoptionProfileRepository adoptionProfileRepository;
+    private final AdoptionProfileService adoptionProfileService;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
@@ -47,6 +54,8 @@ public class DatabaseBootstrap implements CommandLineRunner {
         this.settings = settings;
         this.petTypeService = petTypeService;
         this.petsService = petsService;
+        this.adoptionProfileRepository = adoptionProfileRepository;
+        this.adoptionProfileService = adoptionProfileService;
     }
 
     @Transactional
@@ -132,6 +141,33 @@ public class DatabaseBootstrap implements CommandLineRunner {
     }
 
     @Transactional
+    private void createProfiles(){
+        logger.info("Creating adoption profiles...");
+
+        var users = settings.getProfileUsers();
+        var newPetOwners = settings.getProfileNewPetOwner();
+        var ceps = settings.getProfileCeps();
+        var description = settings.getProfileDefaultDescription();
+        var preferredTypes = settings.getProfileDefaultPreferredTypes();
+
+        for (int i = 0; i < users.size(); i++){
+            var profile = new AdoptionProfile(
+                    usersService.findByUsername(users.get(i)),
+                    ceps.get(i),
+                    description,
+                    Boolean.parseBoolean(newPetOwners.get(i)),
+                    Set.of(),
+                    new HashSet<>(preferredTypes)
+            );
+            profile = adoptionProfileService.completeLocationData(profile, ceps.get(i));
+
+            adoptionProfileRepository.save(profile);
+        }
+
+        logger.info("Adoption profiles successfully created.");
+    }
+
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         logger.info("Loading initial data...");
@@ -139,6 +175,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createUsers();
         createPetTypes();
         createPets();
+        createProfiles();
 
         logger.info("Initial data loading complete!");
     }

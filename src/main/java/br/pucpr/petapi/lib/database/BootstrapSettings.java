@@ -18,15 +18,25 @@ import java.util.List;
 public class BootstrapSettings {
     private List<String> roles;
     private List<String> petTypes;
-    private List<String> usernames;
     private String defaultPassword;
-    private List<String> names;
     private String petDefaultDescription;
+    private String profileDefaultDescription;
+    private List<String> profileDefaultPreferredTypes;
 
-    // esses campos devem todos ter o mesmo tamanho
+    // devem ter o mesmo tamanho (criação dos users de teste)
+    private List<String> usernames;
+    private List<String> names;
+
+    // também devem ter o mesmo tamanho (criação dods pets de teste)
     private List<String> petNames;
     private List<String> petNicknames;
     private List<Integer> petAges;
     private List<String> ownerUsernames;
     private List<String> petAnimalTypes;
+
+    // mesmo tamanho (perfis)
+    private List<String> profileUsers;
+    private List<String> profileCeps;
+    private List<String> profileNewPetOwner;
+
 }

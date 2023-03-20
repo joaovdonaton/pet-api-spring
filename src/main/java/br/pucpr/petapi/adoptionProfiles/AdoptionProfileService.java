@@ -35,30 +35,16 @@ public class AdoptionProfileService {
             throw new ResourceAlreadyExistsException(currentUser.getUsername() + " already has an adoption profile.",
                     HttpStatus.BAD_REQUEST);
 
-        // preencher dados de localização
-        var cepData = locationUtils.getCEPData(adoptionProfileRegisterDTO.getCep());
-        var coordinates = locationUtils.getCoordinates(
-                String.join(
-                        " ",
-                        cepData.getBairro(),
-                        cepData.getLocalidade(),
-                        cepData.getUf()
-                        )
-        );
-
         AdoptionProfile ap = new AdoptionProfile(
             currentUser,
                 adoptionProfileRegisterDTO.getCep(),
                 adoptionProfileRegisterDTO.getDescription(),
                 adoptionProfileRegisterDTO.isNewPetOwner(),
-                cepData.getUf(),
-                cepData.getLocalidade(),
-                cepData.getBairro(),
-                new BigDecimal(coordinates.getLat()),
-                new BigDecimal(coordinates.getLng()),
                 Set.of(),
                 adoptionProfileRegisterDTO.getPreferredPetTypes()
         );
+
+        ap = completeLocationData(ap, adoptionProfileRegisterDTO.getCep());
 
         return repository.save(ap);
     }
@@ -86,21 +72,7 @@ public class AdoptionProfileService {
 
         String cep = adoptionProfileUpdateDTO.getCep();
         if(cep != null){
-            ap.setCep(cep);
-
-            var cepData = locationUtils.getCEPData(cep);
-            var coordinates = locationUtils.getCoordinates(String.join(
-                        " ",
-                        cepData.getBairro(),
-                        cepData.getLocalidade(),
-                        cepData.getUf()
-                ));
-
-            ap.setCity(cepData.getLocalidade());
-            ap.setDistrict(cepData.getBairro());
-            ap.setState(cepData.getUf());
-            ap.setLatitude(new BigDecimal(coordinates.getLat()));
-            ap.setLongitude(new BigDecimal(coordinates.getLng()));
+            ap = completeLocationData(ap, cep);
         }
 
         String description = adoptionProfileUpdateDTO.getDescription();
@@ -117,5 +89,26 @@ public class AdoptionProfileService {
         }
 
         repository.save(ap);
+    }
+
+    // preenche os campos de localização a partir do CEP do adoptionprofile
+    public AdoptionProfile completeLocationData(AdoptionProfile profile, String CEP){
+        profile.setCep(CEP);
+
+        var cepData = locationUtils.getCEPData(CEP);
+        var coordinates = locationUtils.getCoordinates(String.join(
+                " ",
+                cepData.getBairro(),
+                cepData.getLocalidade(),
+                cepData.getUf()
+        ));
+
+        profile.setCity(cepData.getLocalidade());
+        profile.setDistrict(cepData.getBairro());
+        profile.setState(cepData.getUf());
+        profile.setLatitude(new BigDecimal(coordinates.getLat()));
+        profile.setLongitude(new BigDecimal(coordinates.getLng()));
+
+        return profile;
     }
 }

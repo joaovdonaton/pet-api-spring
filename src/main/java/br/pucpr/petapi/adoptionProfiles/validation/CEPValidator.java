@@ -35,7 +35,9 @@ public class CEPValidator implements ConstraintValidator<ValidCEP, String> {
             if(!validChars.contains(c)) return false;
         }
 
-        if(Arrays.stream(cpf.split("")).filter(c -> c.equals("-")).count() >= 2) return false;
+        var dashCount = Arrays.stream(cpf.split("")).filter(c -> c.equals("-")).count();
+
+        if(dashCount != 1 && dashCount != 0) return false;
 
         return true;
     }

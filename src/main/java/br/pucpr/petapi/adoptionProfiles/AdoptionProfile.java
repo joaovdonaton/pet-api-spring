@@ -54,4 +54,13 @@ public class AdoptionProfile {
         this.viewedPetIds = viewedPetIds;
         this.preferredPetTypes = preferredPetTypes;
     }
+
+    public AdoptionProfile(User user, String cep, String description, boolean newPetOwner, Set<UUID> viewedPetIds, Set<String> preferredPetTypes) {
+        this.user = user;
+        this.cep = cep;
+        this.description = description;
+        this.newPetOwner = newPetOwner;
+        this.viewedPetIds = viewedPetIds;
+        this.preferredPetTypes = preferredPetTypes;
+    }
 }
