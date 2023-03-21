@@ -23,8 +23,14 @@ public class AdoptionProfile {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
+    @JoinTable(
+            name = "users_adoption_profiles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "adoption_profile_id", referencedColumnName = "id")
+
+    )
     private User user;
     private String cep;
     private String description;

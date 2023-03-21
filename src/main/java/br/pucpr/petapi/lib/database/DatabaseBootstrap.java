@@ -151,6 +151,10 @@ public class DatabaseBootstrap implements CommandLineRunner {
         var preferredTypes = settings.getProfileDefaultPreferredTypes();
 
         for (int i = 0; i < users.size(); i++){
+            if(usersService.findByUsername(users.get(i)).getAdoptionProfile() != null){
+                logger.info("Adoption profile for " + users.get(i) + " already exists");
+                continue;
+            }
             var profile = new AdoptionProfile(
                     usersService.findByUsername(users.get(i)),
                     ceps.get(i),
