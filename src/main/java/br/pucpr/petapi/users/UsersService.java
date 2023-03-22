@@ -38,7 +38,8 @@ public class UsersService {
     }
 
     public User findByUsername(String username){
-        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username ["+username+"] not found"));
+        return repository.findByUsername(username).orElseThrow(() -> new ResourceDoesNotExistException("Username ["+username+"] not found",
+                HttpStatus.NOT_FOUND));
     }
 
     @Transactional

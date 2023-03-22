@@ -111,4 +111,17 @@ public class AdoptionProfileService {
 
         return profile;
     }
+
+    public AdoptionProfile findAdoptionProfileByUsername(String username){
+        var u = usersService.findByUsername(username);
+        var profile = u.getAdoptionProfile();
+
+        if(profile == null){
+            throw new ResourceDoesNotExistException(
+                    "User ["+u.getUsername()+"] does not have a profile.",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        return profile;
+    }
 }
