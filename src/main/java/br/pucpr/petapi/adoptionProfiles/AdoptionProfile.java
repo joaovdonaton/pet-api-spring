@@ -33,6 +33,7 @@ public class AdoptionProfile {
     )
     private User user;
     private String cep;
+    @Column(length = 550)
     private String description;
     private boolean newPetOwner;
     private String state;
