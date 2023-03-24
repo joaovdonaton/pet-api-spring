@@ -1,5 +1,6 @@
 package br.pucpr.petapi.lib.location;
 
+import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.lib.error.InvalidAddressException;
 import br.pucpr.petapi.lib.error.InvalidCEPException;
 import br.pucpr.petapi.lib.error.ThirdPartyApiFailureException;
@@ -7,6 +8,7 @@ import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import br.pucpr.petapi.lib.location.dto.response.GeocodingResponse;
 import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.lib.security.ApiKeysSettings;
+import net.sf.geographiclib.Geodesic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -76,5 +78,13 @@ public class LocationUtils {
         return locationSettings.getGoogleGoecodingUrl()
                 .replace(PLACEHOLDER_ADDRESS, address)
                 .replace(PLACEHOLDER_KEY, apiKeysSettings.getGoogleApi());
+    }
+
+    // retorna a distância entre dois adoptionprofiles em METROS
+    public int getDirectDistanceBetweenProfiles(AdoptionProfile p1, AdoptionProfile p2){
+        return (int) Geodesic.WGS84.Inverse(
+                p1.getLatitude().doubleValue(), p1.getLongitude().doubleValue(),
+                p2.getLatitude().doubleValue(), p2.getLongitude().doubleValue()
+        ).s12;
     }
 }

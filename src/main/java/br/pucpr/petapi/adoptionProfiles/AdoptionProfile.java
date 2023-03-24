@@ -1,5 +1,6 @@
 package br.pucpr.petapi.adoptionProfiles;
 
+import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

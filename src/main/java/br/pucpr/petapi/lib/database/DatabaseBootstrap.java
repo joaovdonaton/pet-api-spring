@@ -17,6 +17,7 @@ import br.pucpr.petapi.users.UsersRepository;
 import br.pucpr.petapi.users.UsersService;
 import br.pucpr.petapi.users.dto.UserCredentialsDTO;
 import jakarta.transaction.Transactional;
+import net.sf.geographiclib.Geodesic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -180,6 +181,11 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPetTypes();
         createPets();
         createProfiles();
+
+        var p1 = usersService.findByUsername("baratavoadora").getAdoptionProfile();
+        var p2 = usersService.findByUsername("dragaorosa3").getAdoptionProfile();
+
+        System.out.println(locationUtils.getDirectDistanceBetweenProfiles(p1, p2));
 
         logger.info("Initial data loading complete!");
     }
