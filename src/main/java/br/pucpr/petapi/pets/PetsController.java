@@ -2,6 +2,8 @@ package br.pucpr.petapi.pets;
 
 import br.pucpr.petapi.pets.dto.PetInfoDTO;
 import br.pucpr.petapi.pets.dto.PetRegisterDTO;
+import br.pucpr.petapi.pets.enums.AscDescEnum;
+import br.pucpr.petapi.pets.enums.PetSortByEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,13 +50,10 @@ public class PetsController {
             summary = "Search for pets based on parameters"
     )
     @Tag(name="Pet")
-    public List<Pet> search(){
-        return null;
+    public List<Pet> search(@RequestParam(defaultValue = "10") Integer limit,
+                            @RequestParam(defaultValue = "0") Integer page,
+                            @RequestParam(defaultValue = "name", required = false) PetSortByEnum sortBy,
+                            @RequestParam(defaultValue = "asc", required = false) AscDescEnum ascDesc){
+        return service.searchPet(limit, page, sortBy.toString(), ascDesc.toString());
     }
-
-    /* TODO:
-    - Make a proper PetInfoDTO for returning pet data.
-    - Make an endpoint to list petTypes
-    - Make search auth optional
-    * */
 }

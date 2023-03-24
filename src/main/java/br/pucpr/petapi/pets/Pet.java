@@ -35,11 +35,6 @@ public class Pet {
     @JsonIgnore
     private LocalDateTime createdAt;
     @ManyToOne
-//    @JoinTable(
-//            name = "pet_types_pets",
-//            joinColumns = @JoinColumn(name = "pet_type_id"),
-//            inverseJoinColumns = @JoinColumn(name = "pet_id")
-//    )
     @JsonIgnore
     private PetType petType;
 
