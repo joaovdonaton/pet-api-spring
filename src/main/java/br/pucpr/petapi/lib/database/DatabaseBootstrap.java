@@ -3,6 +3,7 @@ package br.pucpr.petapi.lib.database;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfileRepository;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfileService;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileLocationDTO;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
@@ -182,10 +183,13 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPets();
         createProfiles();
 
-        var p1 = usersService.findByUsername("baratavoadora").getAdoptionProfile();
-        var p2 = usersService.findByUsername("dragaorosa3").getAdoptionProfile();
-
-        System.out.println(locationUtils.getDirectDistanceBetweenProfiles(p1, p2));
+        adoptionProfileService.findAllByLevel(
+                2, new AdoptionProfileLocationDTO(
+                        "Centro",
+                        "Curitiba",
+                        "PR"
+                )
+        ).forEach(e -> System.out.println(e.getUser().getUsername()));
 
         logger.info("Initial data loading complete!");
     }

@@ -1,5 +1,6 @@
 package br.pucpr.petapi.adoptionProfiles;
 
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileLocationDTO;
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegisterDTO;
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
@@ -8,11 +9,15 @@ import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.users.User;
 import br.pucpr.petapi.users.UsersService;
 import br.pucpr.petapi.users.dto.UserInfoDTO;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -123,5 +128,40 @@ public class AdoptionProfileService {
         }
 
         return profile;
+    }
+
+    /**
+     * todos as áreas de localização acima do nível atual precisam bater para casos como por exemplo:
+     * bairro de nome "centro" em duas cidades diferentes
+     */
+    public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfileLocationDTO location){
+        if(level < 0 || level >= AdoptionProfile.getLevels()) throw new IllegalArgumentException("Invalid Level: " + level);
+
+        var probe = new AdoptionProfile(
+                level == 0 ? location.getDistrict() : null,
+                level <= 1 ? location.getCity() : null,
+                level <= 2 ? location.getState() : null
+        );
+
+        // esse query by example deve ignorar newPetOwner (tipo é boolean, logo não pode ser null, e portando não é ignorado)
+        return repository.findAll(Example.of(probe, ExampleMatcher.matching().withIgnorePaths("newPetOwner")));
+    }
+
+    /**
+     * @param reference perfil para qual as distâncias serão calculadas
+     * @param limit limite de perfis para retornar
+     * @return lista com os adoption profiles ordenados por distância
+     * Busca realizada com base no sistema de levels de localização (detalhes na classe da entidade AdoptionProfile).
+     */
+    public List<AdoptionProfile> findAdoptionProfilesSortByDistance(AdoptionProfile reference, int limit){
+        List<AdoptionProfile> profiles = new ArrayList<>();
+
+        for (int i = 0; i < reference.getLevels(); i++){
+
+        }
+
+
+
+        return profiles;
     }
 }

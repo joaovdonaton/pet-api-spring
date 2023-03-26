@@ -37,9 +37,9 @@ public class AdoptionProfile {
     @Column(length = 550)
     private String description;
     private boolean newPetOwner;
-    private String state;
-    private String city;
-    private String district;
+    private String state; // level 2
+    private String city; // level 1
+    private String district; // level 0
     @Column(precision = 15, scale = 12)
     private BigDecimal latitude;
     @Column(precision = 15, scale = 12)
@@ -70,5 +70,53 @@ public class AdoptionProfile {
         this.newPetOwner = newPetOwner;
         this.viewedPetIds = viewedPetIds;
         this.preferredPetTypes = preferredPetTypes;
+    }
+
+    public AdoptionProfile(String district, String city, String state){
+        this.district = district;
+        this.city = city;
+        this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "AdoptionProfile{" +
+                "id=" + id +
+                ", user=" + user +
+                ", cep='" + cep + '\'' +
+                ", description='" + description + '\'' +
+                ", newPetOwner=" + newPetOwner +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", viewedPetIds=" + viewedPetIds +
+                ", preferredPetTypes=" + preferredPetTypes +
+                '}';
+    }
+
+    /**
+     * @param level nível da localização, quanto menor, mais "específico"
+     * @return String com nome da localização no level
+     * Os cases deste switch definem os níveis das localizações.
+     * Por padrão a ordem é bairro -> cidade -> estado.
+     */
+    public String getLocationNameByLevel(int level){
+        return switch (level){
+            case 0 -> getDistrict();
+            case 1 -> getCity();
+            case 2 -> getState();
+
+            default -> throw new IllegalArgumentException("Invalid location level" + level);
+        };
+    }
+
+    /**
+     * @return retorna a quantidade levels de localização que essa entidade tem (No AdoptionProfile são 3: bairro,
+     * cidade e estado)
+     */
+    public static int getLevels(){
+        return 3;
     }
 }
