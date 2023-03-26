@@ -55,6 +55,14 @@ public class PetsService {
         return repository.findAll(pageable).toList();
     }
 
+    // encontra todos os pets do usuário logado
+    public List<Pet> findAllPetsBelongingToUser(){
+        UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var pets = usersService.findByUsername(currentUserInfo.getUsername()).getPets().stream().toList();
+
+        return pets;
+    }
+
     private Sort setSortAscDesc(String ascDesc, Sort s){
         return ascDesc.equals("asc") ? s.ascending() : s.descending();
     }

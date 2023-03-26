@@ -56,4 +56,15 @@ public class PetsController {
                             @RequestParam(defaultValue = "asc", required = false) AscDescEnum ascDesc){
         return service.searchPet(limit, page, sortBy.toString(), ascDesc.toString());
     }
+
+    @GetMapping("/me")
+    @RolesAllowed("USER")
+    @SecurityRequirement(name = "auth")
+    @Operation(
+            summary = "Return currently authenticated user's pets"
+    )
+    @Tag(name="Pet")
+    public List<Pet> getMyPets(){
+        return service.findAllPetsBelongingToUser();
+    }
 }
