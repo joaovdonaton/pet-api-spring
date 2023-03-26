@@ -134,13 +134,13 @@ public class AdoptionProfileService {
      * todos as áreas de localização acima do nível atual precisam bater para casos como por exemplo:
      * bairro de nome "centro" em duas cidades diferentes
      */
-    public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfileLocationDTO location){
+    public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfile reference){
         if(level < 0 || level >= AdoptionProfile.getLevels()) throw new IllegalArgumentException("Invalid Level: " + level);
 
         var probe = new AdoptionProfile(
-                level == 0 ? location.getDistrict() : null,
-                level <= 1 ? location.getCity() : null,
-                level <= 2 ? location.getState() : null
+                level == 0 ? reference.getDistrict() : null,
+                level <= 1 ? reference.getCity() : null,
+                level <= 2 ? reference.getState() : null
         );
 
         // esse query by example deve ignorar newPetOwner (tipo é boolean, logo não pode ser null, e portando não é ignorado)
@@ -156,8 +156,8 @@ public class AdoptionProfileService {
     public List<AdoptionProfile> findAdoptionProfilesSortByDistance(AdoptionProfile reference, int limit){
         List<AdoptionProfile> profiles = new ArrayList<>();
 
-        for (int i = 0; i < reference.getLevels(); i++){
-
+        for (int i = 0; i < AdoptionProfile.getLevels(); i++){
+            //var profilesInLevel = findAllByLevel(i, );
         }
 
 

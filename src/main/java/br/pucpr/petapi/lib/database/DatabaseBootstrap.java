@@ -184,7 +184,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createProfiles();
 
         adoptionProfileService.findAllByLevel(
-                2, new AdoptionProfileLocationDTO(
+                2, new AdoptionProfile(
                         "Centro",
                         "Curitiba",
                         "PR"
