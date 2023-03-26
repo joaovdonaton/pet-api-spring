@@ -3,7 +3,6 @@ package br.pucpr.petapi.lib.database;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfileRepository;
 import br.pucpr.petapi.adoptionProfiles.AdoptionProfileService;
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileLocationDTO;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.petTypes.PetType;
 import br.pucpr.petapi.petTypes.PetTypeRepository;
@@ -18,7 +17,6 @@ import br.pucpr.petapi.users.UsersRepository;
 import br.pucpr.petapi.users.UsersService;
 import br.pucpr.petapi.users.dto.UserCredentialsDTO;
 import jakarta.transaction.Transactional;
-import net.sf.geographiclib.Geodesic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -184,12 +182,18 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createProfiles();
 
         adoptionProfileService.findAllByLevel(
-                2, new AdoptionProfile(
+                3, new AdoptionProfile(
                         "Centro",
                         "Curitiba",
                         "PR"
                 )
         ).forEach(e -> System.out.println(e.getUser().getUsername()));
+
+        System.out.println("NHLLL");
+
+        adoptionProfileService.findAdoptionProfilesSortByDistance(
+                usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000
+        ).forEach(p -> System.out.println(p));
 
         logger.info("Initial data loading complete!");
     }

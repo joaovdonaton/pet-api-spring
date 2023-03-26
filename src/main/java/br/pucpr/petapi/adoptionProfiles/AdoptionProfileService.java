@@ -1,8 +1,8 @@
 package br.pucpr.petapi.adoptionProfiles;
 
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileLocationDTO;
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileRegisterDTO;
 import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
+import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileWithDistanceDTO;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AdoptionProfileService {
@@ -131,11 +133,13 @@ public class AdoptionProfileService {
     }
 
     /**
+     * @param level caso seja maior que q quantidade de níveis existentes, a busca será GLOBAL
      * todos as áreas de localização acima do nível atual precisam bater para casos como por exemplo:
      * bairro de nome "centro" em duas cidades diferentes
      */
     public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfile reference){
-        if(level < 0 || level >= AdoptionProfile.getLevels()) throw new IllegalArgumentException("Invalid Level: " + level);
+        if(level < 0) throw new IllegalArgumentException("Invalid Level: " + level);
+        if(level >= AdoptionProfile.getLevels()) return repository.findAll(); // buscar todos
 
         var probe = new AdoptionProfile(
                 level == 0 ? reference.getDistrict() : null,
@@ -153,15 +157,22 @@ public class AdoptionProfileService {
      * @return lista com os adoption profiles ordenados por distância
      * Busca realizada com base no sistema de levels de localização (detalhes na classe da entidade AdoptionProfile).
      */
-    public List<AdoptionProfile> findAdoptionProfilesSortByDistance(AdoptionProfile reference, int limit){
-        List<AdoptionProfile> profiles = new ArrayList<>();
+    public List<AdoptionProfileWithDistanceDTO> findAdoptionProfilesSortByDistance(AdoptionProfile reference, int limit){
+        List<AdoptionProfileWithDistanceDTO> result = new ArrayList<>();
 
-        for (int i = 0; i < AdoptionProfile.getLevels(); i++){
-            //var profilesInLevel = findAllByLevel(i, );
+        for (int i = 0; i < AdoptionProfile.getLevels()+1; i++){
+            for (var p : findAllByLevel(i, reference)){
+                // não adicionar perfil reference ou ja adicionados
+                if(!p.equals(reference) && result.stream().noneMatch(prof -> prof.getProfile().equals(p)))
+                    result.add(new AdoptionProfileWithDistanceDTO(p,
+                            locationUtils.getDirectDistanceBetweenProfiles(p, reference)));
+
+                if(result.size() == limit) break;
+            }
+
+            if(result.size() == limit) break;
         }
 
-
-
-        return profiles;
+        return result.stream().sorted(Comparator.comparingInt(AdoptionProfileWithDistanceDTO::getDistance)).toList();
     }
 }

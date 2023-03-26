@@ -1,7 +1,5 @@
 package br.pucpr.petapi.adoptionProfiles;
 
-import br.pucpr.petapi.adoptionProfiles.dto.AdoptionProfileLocationDTO;
-import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -11,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,24 +78,6 @@ public class AdoptionProfile {
         this.state = state;
     }
 
-    @Override
-    public String toString() {
-        return "AdoptionProfile{" +
-                "id=" + id +
-                ", user=" + user +
-                ", cep='" + cep + '\'' +
-                ", description='" + description + '\'' +
-                ", newPetOwner=" + newPetOwner +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", viewedPetIds=" + viewedPetIds +
-                ", preferredPetTypes=" + preferredPetTypes +
-                '}';
-    }
-
     /**
      * @param level nível da localização, quanto menor, mais "específico"
      * @return String com nome da localização no level
@@ -119,5 +100,17 @@ public class AdoptionProfile {
      */
     public static int getLevels(){
         return 3;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AdoptionProfile that)) return false;
+        return getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
