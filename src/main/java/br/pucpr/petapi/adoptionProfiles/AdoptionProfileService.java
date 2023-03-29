@@ -139,7 +139,8 @@ public class AdoptionProfileService {
      */
     public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfile reference){
         if(level < 0) throw new IllegalArgumentException("Invalid Level: " + level);
-        if(level >= AdoptionProfile.getLevels()) return repository.findAll(); // buscar todos
+        if(level >= AdoptionProfile.getLevels())
+            return repository.findAll().stream().filter(ap -> !ap.equals(reference)).toList(); // buscar todos
 
         var probe = new AdoptionProfile(
                 level == 0 ? reference.getDistrict() : null,
@@ -148,7 +149,9 @@ public class AdoptionProfileService {
         );
 
         // esse query by example deve ignorar newPetOwner (tipo é boolean, logo não pode ser null, e portando não é ignorado)
-        return repository.findAll(Example.of(probe, ExampleMatcher.matching().withIgnorePaths("newPetOwner")));
+        return repository.
+                findAll(Example.of(probe, ExampleMatcher.matching().withIgnorePaths("newPetOwner")))
+                .stream().filter(ap -> !ap.equals(reference)).toList();
     }
 
     /**
@@ -162,8 +165,8 @@ public class AdoptionProfileService {
 
         for (int i = 0; i < AdoptionProfile.getLevels()+1; i++){
             for (var p : findAllByLevel(i, reference)){
-                // não adicionar perfil reference ou ja adicionados
-                if(!p.equals(reference) && result.stream().noneMatch(prof -> prof.getProfile().equals(p)))
+                // não adicionar ja adicionados
+                if(result.stream().noneMatch(prof -> prof.getProfile().equals(p)))
                     result.add(new AdoptionProfileWithDistanceDTO(p,
                             locationUtils.getDirectDistanceBetweenProfiles(p, reference)));
 

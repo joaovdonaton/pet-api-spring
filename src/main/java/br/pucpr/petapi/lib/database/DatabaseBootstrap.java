@@ -181,19 +181,12 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPets();
         createProfiles();
 
-        adoptionProfileService.findAllByLevel(
-                3, new AdoptionProfile(
-                        "Centro",
-                        "Curitiba",
-                        "PR"
-                )
-        ).forEach(e -> System.out.println(e.getUser().getUsername()));
-
-        System.out.println("NHLLL");
-
         adoptionProfileService.findAdoptionProfilesSortByDistance(
                 usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000
         ).forEach(p -> System.out.println(p));
+
+        petsService.findAllByLevel(1, usersService.findByUsername("ricardo66").getAdoptionProfile())
+                        .forEach(pet -> System.out.println(pet.getName() + "|| owner: " + pet.getUser().getUsername()));
 
         logger.info("Initial data loading complete!");
     }
