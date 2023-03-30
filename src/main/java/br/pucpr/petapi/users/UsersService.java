@@ -11,6 +11,7 @@ import br.pucpr.petapi.users.dto.UserInfoDTO;
 import br.pucpr.petapi.users.dto.UserRegisterDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,15 @@ public class UsersService {
     public UserInfoDTO extractUserInfo(User u){
         return new UserInfoDTO(u.getId(), u.getName(), u.getUsername(),
                 u.getRoleNames());
+    }
+
+    /**
+     * @return o user atualmente autenticado
+     */
+    public User getCurrentAuth(){
+        return findByUsername(
+                ((UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                        .getUsername()
+        );
     }
 }

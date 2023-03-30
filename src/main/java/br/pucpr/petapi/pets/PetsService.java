@@ -58,7 +58,9 @@ public class PetsService {
 
     public List<Pet> searchPet(int limit, int page, String sortBy, String ascDesc){
         if(sortBy.equals("distance")){
-            return null;
+            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1))
+                    .stream().map(PetWithDistance::getPet).toList();
+            return pets.stream().skip(page*limit).limit(limit).toList();
         }
         else {
             Pageable pageable = PageRequest.of(page,
@@ -78,7 +80,6 @@ public class PetsService {
 
         for (int i = 0; i < AdoptionProfile.getLevels()+1; i++){
             for (var p : findAllByLevel(i, reference)){
-                // não adicionar ja adicionados
                 if(result.stream().noneMatch(pet -> pet.getPet().equals(p)))
                     result.add(new PetWithDistance(p,
                             locationUtils.getDirectDistanceBetweenProfiles(p.getUser().getAdoptionProfile(), reference)));
