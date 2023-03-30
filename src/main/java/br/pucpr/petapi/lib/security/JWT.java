@@ -1,6 +1,6 @@
 package br.pucpr.petapi.lib.security;
 
-import br.pucpr.petapi.users.dto.UserInfoDTO;
+import br.pucpr.petapi.rest.users.dto.UserInfoDTO;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonDeserializer;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;

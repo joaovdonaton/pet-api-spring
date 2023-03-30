@@ -1,6 +1,6 @@
 package br.pucpr.petapi.lib.location;
 
-import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.lib.error.InvalidAddressException;
 import br.pucpr.petapi.lib.error.InvalidCEPException;
 import br.pucpr.petapi.lib.error.ThirdPartyApiFailureException;

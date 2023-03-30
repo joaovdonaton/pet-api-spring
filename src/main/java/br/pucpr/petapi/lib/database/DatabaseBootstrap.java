@@ -1,21 +1,21 @@
 package br.pucpr.petapi.lib.database;
 
-import br.pucpr.petapi.adoptionProfiles.AdoptionProfile;
-import br.pucpr.petapi.adoptionProfiles.AdoptionProfileRepository;
-import br.pucpr.petapi.adoptionProfiles.AdoptionProfileService;
+import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileRepository;
+import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.lib.location.LocationUtils;
-import br.pucpr.petapi.petTypes.PetType;
-import br.pucpr.petapi.petTypes.PetTypeRepository;
-import br.pucpr.petapi.petTypes.PetTypeService;
-import br.pucpr.petapi.pets.Pet;
-import br.pucpr.petapi.pets.PetsRepository;
-import br.pucpr.petapi.pets.PetsService;
-import br.pucpr.petapi.roles.Role;
-import br.pucpr.petapi.roles.RolesRepository;
-import br.pucpr.petapi.users.User;
-import br.pucpr.petapi.users.UsersRepository;
-import br.pucpr.petapi.users.UsersService;
-import br.pucpr.petapi.users.dto.UserCredentialsDTO;
+import br.pucpr.petapi.rest.petTypes.PetType;
+import br.pucpr.petapi.rest.petTypes.PetTypeRepository;
+import br.pucpr.petapi.rest.petTypes.PetTypeService;
+import br.pucpr.petapi.rest.pets.Pet;
+import br.pucpr.petapi.rest.pets.PetsRepository;
+import br.pucpr.petapi.rest.pets.PetsService;
+import br.pucpr.petapi.rest.roles.Role;
+import br.pucpr.petapi.rest.roles.RolesRepository;
+import br.pucpr.petapi.rest.users.User;
+import br.pucpr.petapi.rest.users.UsersRepository;
+import br.pucpr.petapi.rest.users.UsersService;
+import br.pucpr.petapi.rest.users.dto.UserCredentialsDTO;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,9 +132,10 @@ public class DatabaseBootstrap implements CommandLineRunner {
                     , LocalDateTime.now(),
                     petTypeService.findPetTypeByName(petTypeNames.get(i)));
 
+            pet = petsRepository.save(pet);
+
             u.addPet(pet);
 
-            petsRepository.save(pet);
         }
 
         logger.info("Pets sucessfully created");
@@ -180,9 +181,9 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPetTypes();
         createPets();
         createProfiles();
-
-        petsService.findPetsSortByDistance(usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000, true)
-                .forEach(System.out::println);
+//
+//        petsService.findPetsSortByDistance(usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000, true)
+//                .forEach(System.out::println);
 
         logger.info("Initial data loading complete!");
     }
