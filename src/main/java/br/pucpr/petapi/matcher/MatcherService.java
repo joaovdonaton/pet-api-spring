@@ -26,9 +26,8 @@ public class MatcherService {
     }
 
     /**
-     * @param limit
-     * @return
-     *
+     * Retorna matches para o usuário atualmente autenticado. Pega os pets ordenados por distância e filtrados por viewed
+     * e em seguida faz a ordenação baseado nas preferências de tipo de pet do usuário.
      */
     @Transactional
     public List<MatchingResultDTO> getNextMatches(int limit){
@@ -41,8 +40,8 @@ public class MatcherService {
             if(a.getDistance() - b.getDistance() > 1000) return 0;
 
             var preferredTypes = currentAuth.getAdoptionProfile().getPreferredPetTypes();
-            var hasA = preferredTypes.contains(a.getPetType());
-            var hasB = preferredTypes.contains(b.getPetType());
+            var hasA = preferredTypes.contains(a.getType());
+            var hasB = preferredTypes.contains(b.getType());
 
             // caso não haja preferência, ou seja por todos, não ordernar por preferência
             if(preferredTypes.isEmpty() || preferredTypes.containsAll(petTypeService.getAllPetTypeNames())) return 0;
@@ -60,7 +59,7 @@ public class MatcherService {
                 petWithDistance.getNickname(),
                 petWithDistance.getAge(),
                 petWithDistance.getDescription(),
-                petWithDistance.getPetType(),
+                petWithDistance.getType(),
                 petWithDistance.getUser().getUsername(),
                 petWithDistance.getUser().getAdoptionProfile().getCity(),
                 petWithDistance.getUser().getAdoptionProfile().getState(),

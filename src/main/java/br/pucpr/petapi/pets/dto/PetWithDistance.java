@@ -22,7 +22,7 @@ public class PetWithDistance {
     private String nickname;
     private Integer age;
     private String description;
-    private String petType;
+    private String type;
     @JsonIgnore
     private User user;
     private int distance;

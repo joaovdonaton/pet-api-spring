@@ -73,6 +73,8 @@ public class PetsService {
      * @param reference perfil para qual as distâncias serão calculadas
      * @param limit limite de pets para retornar
      * @return lista com pets ordenados por distância
+     * Busca por níveis de localização. Primeiro realiza a busca nos níveis mais específicos (neste caso,
+     * o bairro), e depois expande a busca, e para quando encontrar a quantidade pedida no limit.
      */
     public List<PetWithDistance> findPetsSortByDistance(AdoptionProfile reference, int limit, boolean filterViewed){
         List<PetWithDistance> result = new ArrayList<>();
