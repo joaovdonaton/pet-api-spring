@@ -136,6 +136,7 @@ public class AdoptionProfileService {
      * @param level caso seja maior que q quantidade de níveis existentes, a busca será GLOBAL
      * todos as áreas de localização acima do nível atual precisam bater para casos como por exemplo:
      * bairro de nome "centro" em duas cidades diferentes
+     * @return a lista retornada já exclui o profile reference
      */
     public List<AdoptionProfile> findAllByLevel(int level, AdoptionProfile reference){
         if(level < 0) throw new IllegalArgumentException("Invalid Level: " + level);

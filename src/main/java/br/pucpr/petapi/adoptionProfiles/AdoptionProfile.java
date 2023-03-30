@@ -3,6 +3,7 @@ package br.pucpr.petapi.adoptionProfiles;
 import br.pucpr.petapi.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -100,6 +101,11 @@ public class AdoptionProfile {
      */
     public static int getLevels(){
         return 3;
+    }
+
+    @Transactional
+    public void addViewedId(UUID id){
+        viewedPetIds.add(id);
     }
 
     @Override

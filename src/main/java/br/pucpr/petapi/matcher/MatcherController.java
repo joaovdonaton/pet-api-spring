@@ -30,7 +30,6 @@ public class MatcherController {
     )
     @Tag(name = "Matcher")
     public List<MatchingResultDTO> nextMatch(@RequestParam(defaultValue = "1") Integer limit){
-        //return service.
-        return null;
+        return service.getNextMatches(limit);
     }
 }

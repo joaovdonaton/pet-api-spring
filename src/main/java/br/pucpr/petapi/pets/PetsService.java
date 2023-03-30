@@ -58,7 +58,7 @@ public class PetsService {
 
     public List<PetWithDistance> searchPet(int limit, int page, String sortBy, String ascDesc){
         if(sortBy.equals("distance")){
-            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1));
+            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1), false);
             return pets.stream().skip(page*limit).limit(limit).toList();
         }
         else {
@@ -74,14 +74,18 @@ public class PetsService {
      * @param limit limite de pets para retornar
      * @return lista com pets ordenados por distância
      */
-    public List<PetWithDistance> findPetsSortByDistance(AdoptionProfile reference, int limit){
+    public List<PetWithDistance> findPetsSortByDistance(AdoptionProfile reference, int limit, boolean filterViewed){
         List<PetWithDistance> result = new ArrayList<>();
 
         for (int i = 0; i < AdoptionProfile.getLevels()+1; i++){
             for (var p : findAllByLevel(i, reference)){
-                if(result.stream().noneMatch(pet -> p.getId().equals(pet.getId())))
+                if(result.stream().noneMatch(pet -> p.getId().equals(pet.getId()))) {
+                    // remover os já visualizados, caso filterViewed seja true (para o matcher)
+                    if(filterViewed && reference.getViewedPetIds().stream().anyMatch(id -> id.equals(p.getId()))) continue;
+
                     result.add(PetWithDistance.fromPet(p,
                             locationUtils.getDirectDistanceBetweenProfiles(p.getUser().getAdoptionProfile(), reference)));
+                }
 
                 if(result.size() == limit) break;
             }

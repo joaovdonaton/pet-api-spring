@@ -181,7 +181,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPets();
         createProfiles();
 
-        petsService.findPetsSortByDistance(usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000)
+        petsService.findPetsSortByDistance(usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000, true)
                 .forEach(System.out::println);
 
         logger.info("Initial data loading complete!");
