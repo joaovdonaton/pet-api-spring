@@ -56,17 +56,16 @@ public class PetsService {
         return repository.save(p);
     }
 
-    public List<Pet> searchPet(int limit, int page, String sortBy, String ascDesc){
+    public List<PetWithDistance> searchPet(int limit, int page, String sortBy, String ascDesc){
         if(sortBy.equals("distance")){
-            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1))
-                    .stream().map(PetWithDistance::getPet).toList();
+            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1));
             return pets.stream().skip(page*limit).limit(limit).toList();
         }
         else {
             Pageable pageable = PageRequest.of(page,
                     limit,
                     setSortAscDesc(ascDesc, Sort.by(sortBy)));
-            return repository.findAll(pageable).toList();
+            return repository.findAll(pageable).stream().map(p -> PetWithDistance.fromPet(p, -1)).toList();
         }
     }
 
@@ -80,8 +79,8 @@ public class PetsService {
 
         for (int i = 0; i < AdoptionProfile.getLevels()+1; i++){
             for (var p : findAllByLevel(i, reference)){
-                if(result.stream().noneMatch(pet -> pet.getPet().equals(p)))
-                    result.add(new PetWithDistance(p,
+                if(result.stream().noneMatch(pet -> p.getId().equals(pet.getId())))
+                    result.add(PetWithDistance.fromPet(p,
                             locationUtils.getDirectDistanceBetweenProfiles(p.getUser().getAdoptionProfile(), reference)));
 
                 if(result.size() == limit) break;
