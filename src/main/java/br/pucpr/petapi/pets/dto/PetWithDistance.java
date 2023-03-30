@@ -9,4 +9,9 @@ import lombok.Data;
 public class PetWithDistance {
     private Pet pet;
     private int distance;
+
+    @Override
+    public String toString() {
+        return "distance to " + pet.getName() + "(owned by: " + pet.getUser().getUsername() + ") = " + distance + "meters";
+    }
 }
