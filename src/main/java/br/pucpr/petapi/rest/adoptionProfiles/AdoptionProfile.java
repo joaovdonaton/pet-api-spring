@@ -108,6 +108,11 @@ public class AdoptionProfile {
         viewedPetIds.add(id);
     }
 
+    @Transactional
+    public void clearViewedIds(){
+        viewedPetIds.clear();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

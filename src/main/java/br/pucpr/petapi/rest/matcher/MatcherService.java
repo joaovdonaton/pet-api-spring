@@ -66,4 +66,14 @@ public class MatcherService {
                 petWithDistance.getDistance()
         )).toList();
     }
+
+    /**
+     * Apaga a lista de pets já visualizados no matcher pelo usuário atualmente autenticado
+     */
+    @Transactional
+    public void clearViewedHistory(){
+        var currentProfile = usersService.getCurrentAuth().getAdoptionProfile();
+
+        currentProfile.clearViewedIds();
+    }
 }

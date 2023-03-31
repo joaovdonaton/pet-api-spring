@@ -5,10 +5,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,5 +32,17 @@ public class MatcherController {
     @Tag(name = "Matcher")
     public List<MatchingResultDTO> nextMatch(@RequestParam(defaultValue = "1") Integer limit){
         return service.getNextMatches(limit);
+    }
+
+    @DeleteMapping("/")
+    @RolesAllowed("USER")
+    @SecurityRequirement(name = "auth")
+    @Operation(
+            summary = "clears the currently authenticated user's matcher viewed history"
+    )
+    @Tag(name = "Matcher")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void clearHistory(){
+        service.clearViewedHistory();
     }
 }
