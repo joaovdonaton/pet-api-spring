@@ -1,22 +1,18 @@
 package br.pucpr.petapi.rest.adoptionProfiles;
 
-import br.pucpr.petapi.lib.database.TestDataSettings;
+import br.pucpr.petapi.TestDataLoader;
 import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
-import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
-import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
+import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import br.pucpr.petapi.rest.users.User;
 import br.pucpr.petapi.rest.users.UsersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -32,6 +28,7 @@ public class AdoptionProfileServiceTest {
     private LocationUtils locationUtils;
     @Mock
     private AdoptionProfileRepository adoptionProfileRepository;
+    private final TestDataLoader testDataLoader = new TestDataLoader();
 
     @BeforeEach
     public void setup(){
@@ -42,38 +39,26 @@ public class AdoptionProfileServiceTest {
     public void shouldCompleteProfileLocationData(){
         AdoptionProfile ap = new AdoptionProfile();
 
-        when(locationUtils.getCEPData(any())).thenReturn(new CEPDataResponse(
-                "80250-220",
-                "Avenida Visconde de Guarapuava",
-                "de 3337/3338 a 4379/4380",
-                "Centro",
-                "Curitiba",
-                "PR",
-                "4106902",
-                "",
-                "41",
-                "7535"
-        ));
+        var cepData = testDataLoader.getCepDataResponses().get(0);
+        when(locationUtils.getCEPData(any())).thenReturn(cepData);
 
-        when(locationUtils.getCoordinates(any())).thenReturn(new CoordinatesDTO(
-                "-25.437242700000",
-                "-49.269966500000"
-        ));
+        var coordinateData = testDataLoader.getCoordinatesDTOs().get(0);
+        when(locationUtils.getCoordinates(any())).thenReturn(coordinateData);
 
         AdoptionProfile expectedAp = new AdoptionProfile(null,
-                "80250-220",
+                cepData.getCep(),
                 null,
                 false,
-                "PR",
-                "Curitiba",
-                "Centro",
-                new BigDecimal("-25.437242700000"),
-                new BigDecimal("-49.269966500000"),
+                cepData.getUf(),
+                cepData.getLocalidade(),
+                cepData.getBairro(),
+                new BigDecimal(coordinateData.getLat()),
+                new BigDecimal(coordinateData.getLng()),
                 null,
                 null
                 );
 
-         AdoptionProfile result = service.completeLocationData(ap, "80250-220");
+         AdoptionProfile result = service.completeLocationData(ap, cepData.getCep());
 
          assertAll(
                  () -> assertEquals(expectedAp.getCep(), result.getCep()),
@@ -93,6 +78,37 @@ public class AdoptionProfileServiceTest {
         when(user.getAdoptionProfile()).thenReturn(null);
 
         assertThrows(ResourceDoesNotExistException.class, () -> service.findAdoptionProfileByUsername("ricardo66"));
+    }
 
+    @Test
+    public void shouldUpdateProfileLocationData_IfCepHasBeenUpdated(){
+        //retornar perfil de adoção antigo
+        var user = mock(User.class);
+        when(usersService.getCurrentAuth()).thenReturn(user);
+
+        AdoptionProfile oldProfile = testDataLoader.getAdoptionProfiles().get(0);
+        when(user.getAdoptionProfile()).thenReturn(oldProfile);
+
+        // chamada do método para atualizar dados de licalização
+        var newCepData = testDataLoader.getCepDataResponses().get(1);
+        var newCoordinateData = testDataLoader.getCoordinatesDTOs().get(1);
+
+        when(locationUtils.getCEPData(any())).thenReturn(newCepData);
+        when(locationUtils.getCoordinates(any())).thenReturn(newCoordinateData);
+
+        service.updateAdoptionProfile(new AdoptionProfileUpdateDTO(newCepData.getCep(),
+                null,
+                oldProfile.isNewPetOwner(),
+                null));
+
+        //validar se os dados foram atualizados
+        assertAll(
+                () -> assertEquals(newCepData.getCep(), oldProfile.getCep()),
+                () -> assertEquals(newCepData.getUf(), oldProfile.getState()),
+                () -> assertEquals(newCepData.getLocalidade(), oldProfile.getCity()),
+                () -> assertEquals(newCepData.getBairro(), oldProfile.getDistrict()),
+                () -> assertEquals(new BigDecimal(newCoordinateData.getLat()), oldProfile.getLatitude()),
+                () -> assertEquals(new BigDecimal(newCoordinateData.getLng()), oldProfile.getLongitude())
+        );
     }
 }

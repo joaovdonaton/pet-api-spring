@@ -67,8 +67,7 @@ public class AdoptionProfileService {
     }
 
     public void updateAdoptionProfile(AdoptionProfileUpdateDTO adoptionProfileUpdateDTO) {
-        UserInfoDTO currentUserInfo = (UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = usersService.findById(currentUserInfo.getId());
+        User currentUser = usersService.getCurrentAuth();
 
         AdoptionProfile ap = currentUser.getAdoptionProfile();
 
