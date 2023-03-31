@@ -1,10 +1,12 @@
 package br.pucpr.petapi.lib.location.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
+@AllArgsConstructor
 public class CEPDataResponse {
     private String cep;
     private String logradouro;

@@ -37,13 +37,13 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private final LocationUtils locationUtils;
     private final UsersService usersService;
     private final PetsRepository petsRepository;
-    private final BootstrapSettings settings;
+    private final TestDataSettings settings;
     private final PetTypeService petTypeService;
     private final PetsService petsService;
     private final AdoptionProfileRepository adoptionProfileRepository;
     private final AdoptionProfileService adoptionProfileService;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, TestDataSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;

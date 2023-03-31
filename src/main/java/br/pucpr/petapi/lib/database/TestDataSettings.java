@@ -10,12 +10,12 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.List;
 
 @Configuration
-@PropertySource("/bootstrapdata.properties")
+@PropertySource("/testdata.properties")
 @ConfigurationProperties("data")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BootstrapSettings {
+public class TestDataSettings {
     private List<String> roles;
     private List<String> petTypes;
     private String defaultPassword;
