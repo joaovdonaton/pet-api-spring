@@ -1,5 +1,6 @@
 package br.pucpr.petapi.rest.pets;
 
+import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.petTypes.PetType;
 import br.pucpr.petapi.rest.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,7 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +40,9 @@ public class Pet {
     @ManyToOne
     @JsonIgnore
     private PetType petType;
+    @JsonIgnore
+    @OneToMany(mappedBy = "pet")
+    private Set<AdoptionRequest> adoptionRequests = new HashSet<>();
 
     public Pet(String name, String nickname, Integer age, String description, User user, LocalDateTime createdAt, PetType petType) {
         this.name = name;

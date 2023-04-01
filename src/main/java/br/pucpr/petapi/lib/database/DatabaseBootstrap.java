@@ -4,6 +4,9 @@ import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileRepository;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.lib.location.LocationUtils;
+import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
+import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsRepository;
+import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.petTypes.PetType;
 import br.pucpr.petapi.rest.petTypes.PetTypeRepository;
 import br.pucpr.petapi.rest.petTypes.PetTypeService;
@@ -42,8 +45,9 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private final PetsService petsService;
     private final AdoptionProfileRepository adoptionProfileRepository;
     private final AdoptionProfileService adoptionProfileService;
+    private final AdoptionRequestsRepository adoptionRequestsRepository;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService, AdoptionRequestsRepository adoptionRequestsRepository) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
@@ -56,6 +60,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         this.petsService = petsService;
         this.adoptionProfileRepository = adoptionProfileRepository;
         this.adoptionProfileService = adoptionProfileService;
+        this.adoptionRequestsRepository = adoptionRequestsRepository;
     }
 
     @Transactional
@@ -181,9 +186,17 @@ public class DatabaseBootstrap implements CommandLineRunner {
         createPetTypes();
         createPets();
         createProfiles();
-//
-//        petsService.findPetsSortByDistance(usersService.findByUsername("ricardo66").getAdoptionProfile(), 1000, true)
-//                .forEach(System.out::println);
+
+        AdoptionRequest ar = new AdoptionRequest(
+                usersService.findByUsername("ricardo66").getPets().stream().findFirst().get(),
+                usersService.findByUsername("ricardo66"),
+                usersService.findByUsername("baratavoadora"),
+                "I like your dog",
+                "I really like that cute liitle doggy of yours, and I want it",
+                Status.PENDING
+        );
+
+        adoptionRequestsRepository.save(ar);
 
         logger.info("Initial data loading complete!");
     }

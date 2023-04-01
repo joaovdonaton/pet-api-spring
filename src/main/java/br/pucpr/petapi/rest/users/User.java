@@ -1,6 +1,7 @@
 package br.pucpr.petapi.rest.users;
 
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.pets.Pet;
 import br.pucpr.petapi.rest.roles.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,13 +36,14 @@ public class User {
     @ManyToMany(mappedBy = "users")
     @JsonIgnore
     private Set<Role> roles = new HashSet<>();
-
     @OneToOne(mappedBy = "user")
     private AdoptionProfile adoptionProfile;
-
     @OneToMany(mappedBy = "user")
-//    @JoinTable(name = "users_pets", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
     private Set<Pet> pets = new HashSet<>();
+    @OneToMany(mappedBy = "userReceiver")
+    private Set<AdoptionRequest> incomingRequests = new HashSet<>();
+    @OneToMany(mappedBy = "userSender")
+    private Set<AdoptionRequest> outgoingRequests = new HashSet<>();
 
     public User(String username, String password, String name) {
         this.username = username;
