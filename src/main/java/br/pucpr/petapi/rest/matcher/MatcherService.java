@@ -55,6 +55,7 @@ public class MatcherService {
         pets.forEach(petWithDistance -> currentAuth.getAdoptionProfile().addViewedId(petWithDistance.getId()));
 
         return pets.stream().map(petWithDistance -> new MatchingResultDTO(
+                petWithDistance.getId(),
                 petWithDistance.getName(),
                 petWithDistance.getNickname(),
                 petWithDistance.getAge(),

@@ -3,6 +3,7 @@ package br.pucpr.petapi.rest.adoptionRequests;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.pets.Pet;
 import br.pucpr.petapi.rest.users.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,13 +22,16 @@ public class AdoptionRequest {
     @GeneratedValue
     private UUID id;
     @ManyToOne
+    @JsonIgnore
     private Pet pet;
     @ManyToOne
+    @JsonIgnore
     private User userSender;
     @ManyToOne
+    @JsonIgnore
     private User userReceiver;
-
     private String title;
+    @Column(length = 750)
     private String message;
     @Enumerated(EnumType.STRING)
     private Status status;

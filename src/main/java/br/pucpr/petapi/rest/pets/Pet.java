@@ -5,6 +5,7 @@ import br.pucpr.petapi.rest.petTypes.PetType;
 import br.pucpr.petapi.rest.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,6 +53,12 @@ public class Pet {
         this.user = user;
         this.createdAt = createdAt;
         this.petType = petType;
+    }
+
+    @Transactional
+    public void addAdoptionRequest(AdoptionRequest r){
+        adoptionRequests.add(r);
+        r.setPet(this);
     }
 
     @Override

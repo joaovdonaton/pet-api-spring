@@ -3,9 +3,12 @@ package br.pucpr.petapi.rest.matcher.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 public class MatchingResultDTO {
+    private UUID petId;
     private String name;
     private String nickname;
     private Integer age;

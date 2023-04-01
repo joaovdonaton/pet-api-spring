@@ -66,6 +66,18 @@ public class User {
         pets.add(pet);
     }
 
+    @Transactional
+    public void addIncomingRequest(AdoptionRequest r){
+        incomingRequests.add(r);
+        r.setUserReceiver(this);
+    }
+
+    @Transactional
+    public void addOutgoingRequest(AdoptionRequest r){
+        outgoingRequests.add(r);
+        r.setUserSender(this);
+    }
+
     public Set<String> getRoleNames(){
         return getRoles().stream().map(Role::getName).collect(Collectors.toSet());
     }

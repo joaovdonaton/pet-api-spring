@@ -1,5 +1,6 @@
 package br.pucpr.petapi.rest.pets;
 
+import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.lib.location.LocationUtils;
@@ -10,6 +11,7 @@ import br.pucpr.petapi.rest.users.User;
 import br.pucpr.petapi.rest.users.UsersService;
 import br.pucpr.petapi.rest.users.dto.UserInfoDTO;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PetsService {
@@ -36,6 +39,11 @@ public class PetsService {
 
     public boolean existsByName(String name){
         return repository.existsByName(name);
+    }
+
+    public Pet findById(UUID id){
+        return repository.findById(id).orElseThrow(() ->
+                new ResourceDoesNotExistException("Pet with ID ["+id+"] does not exist.", HttpStatus.NOT_FOUND));
     }
 
     public Pet createPet(PetRegisterDTO petRegisterDTO) {
