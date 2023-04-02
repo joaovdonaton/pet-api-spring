@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/pets")
@@ -69,5 +71,16 @@ public class PetsController {
     @Tag(name="Pet")
     public List<Pet> getMyPets(){
         return service.findAllPetsBelongingToUser();
+    }
+
+    @GetMapping("/{id}")
+    @RolesAllowed("USER")
+    @SecurityRequirement(name = "auth")
+    @Operation(
+            summary = "Get pet info by ID"
+    )
+    @Tag(name="Pet")
+    public PetInfoDTO getPetInfoByID(@PathVariable UUID id){
+        return PetInfoDTO.fromPet(service.findById(id));
     }
 }
