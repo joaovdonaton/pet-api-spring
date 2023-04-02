@@ -1,7 +1,10 @@
 package br.pucpr.petapi.rest.adoptionRequests;
 
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestInfoDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
+import br.pucpr.petapi.rest.adoptionRequests.enums.RequestType;
+import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +12,8 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/adoption/requests")
@@ -40,5 +45,18 @@ public class AdoptionRequestsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void patchRequest(@RequestBody @Valid AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO){
         service.updateStatus(adoptionRequestStatusPatchDTO);
+    }
+
+    @GetMapping("/")
+    @SecurityRequirement(name = "auth")
+    @RolesAllowed("USER")
+    @Operation(
+            summary = "List requests for user",
+            description = ""
+    )
+    @Tag(name = "Adoption")
+    public List<AdoptionRequestInfoDTO> listRequests(@RequestParam(required = false) Status statusFilter,
+                                                     @RequestParam(required = false) RequestType typeFilter){
+        return service.listRequests(statusFilter, typeFilter);
     }
 }

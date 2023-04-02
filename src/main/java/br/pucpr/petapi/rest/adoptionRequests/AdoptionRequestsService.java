@@ -4,8 +4,10 @@ import br.pucpr.petapi.lib.error.BadRequest;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.error.UnauthorizedException;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestInfoDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
+import br.pucpr.petapi.rest.adoptionRequests.enums.RequestType;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.pets.PetsService;
 import br.pucpr.petapi.rest.users.UsersService;
@@ -13,6 +15,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -66,7 +71,7 @@ public class AdoptionRequestsService {
     @Transactional
     public void updateStatus(AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO){
         var currentUser = usersService.getCurrentAuth();
-        var request = findById(adoptionRequestStatusPatchDTO.getRequestId());
+        var request = findById((adoptionRequestStatusPatchDTO.getRequestId()));
 
         if(!currentUser.getId().equals(request.getUserReceiver().getId()))
             throw new UnauthorizedException("User is not the receiver of this request");
@@ -74,5 +79,24 @@ public class AdoptionRequestsService {
         request.setStatus(Status.valueOf(adoptionRequestStatusPatchDTO.getStatus()));
 
         repository.save(request);
+    }
+
+    @Transactional
+    public List<AdoptionRequestInfoDTO> listRequests(Status statusFilter, RequestType typeFilter) {
+        var currentUser = usersService.getCurrentAuth();
+        Set<AdoptionRequest> requests = new HashSet<>();
+
+        if(typeFilter == null || typeFilter == RequestType.INCOMING) requests.addAll(currentUser.getIncomingRequests());
+        if(typeFilter == null || typeFilter == RequestType.OUTGOING) requests.addAll(currentUser.getOutgoingRequests());
+
+        var requestsStream = requests.stream();
+
+        if(statusFilter != null)
+            requestsStream = requestsStream.filter(r -> r.getStatus().equals(statusFilter));
+
+        return requestsStream.map(ar ->
+                new AdoptionRequestInfoDTO(ar.getId(), ar.getPet().getId(), ar.getUserSender().getId(),
+                        ar.getTitle(), ar.getMessage(), ar.getStatus())
+        ).toList();
     }
 }
