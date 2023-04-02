@@ -3,10 +3,13 @@ package br.pucpr.petapi.rest.AdoptionRequests;
 import br.pucpr.petapi.TestDataLoader;
 import br.pucpr.petapi.lib.error.BadRequest;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.UnauthorizedException;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsRepository;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsService;
-import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegister;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
+import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.pets.Pet;
 import br.pucpr.petapi.rest.pets.PetsService;
 import br.pucpr.petapi.rest.users.User;
@@ -17,7 +20,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -62,7 +67,7 @@ public class AdoptionRequestsServiceTest {
 
         assertThrows(ResourceAlreadyExistsException.class, () -> {
             service.createAdoptionRequest(
-                new AdoptionRequestRegister(pet.getId(),
+                new AdoptionRequestRegisterDTO(pet.getId(),
                         "A".repeat(20),
                         "A".repeat(75)));
         });
@@ -84,11 +89,29 @@ public class AdoptionRequestsServiceTest {
         when(pet.getUser()).thenReturn(userReceiver);
 
         assertThrows(BadRequest.class, () ->
-            service.createAdoptionRequest(new AdoptionRequestRegister(
+            service.createAdoptionRequest(new AdoptionRequestRegisterDTO(
                     pet.getId(),
                     "A".repeat(20),
                     "A".repeat(75))
             )
         );
+    }
+
+    @Test
+    public void shouldThrowUnauthorized_IfUserIsNotReceiverOnPatch(){
+        var user = Mockito.mock(User.class);
+        when(user.getId()).thenReturn(UUID.randomUUID());
+        when(usersService.getCurrentAuth()).thenReturn(user);
+
+        var receiver = Mockito.mock(User.class);
+        when(receiver.getId()).thenReturn(UUID.randomUUID()); // ids do user e do receiver do request são diferentes
+
+        var request = Mockito.mock(AdoptionRequest.class);
+        when(request.getUserReceiver()).thenReturn(receiver);
+        when(adoptionRequestsRepository.findById(any())).thenReturn(Optional.of(request));
+
+        assertThrows(UnauthorizedException.class, () -> service.updateStatus(
+                new AdoptionRequestStatusPatchDTO(UUID.randomUUID(), "PENDING")
+        ));
     }
 }

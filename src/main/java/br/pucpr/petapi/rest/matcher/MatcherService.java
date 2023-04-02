@@ -1,11 +1,13 @@
 package br.pucpr.petapi.rest.matcher;
 
+import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.rest.matcher.dto.MatchingResultDTO;
 import br.pucpr.petapi.rest.petTypes.PetTypeService;
 import br.pucpr.petapi.rest.pets.PetsService;
 import br.pucpr.petapi.rest.users.UsersService;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,15 +33,15 @@ public class MatcherService {
      */
     @Transactional
     public List<MatchingResultDTO> getNextMatches(int limit){
-        var currentAuth = usersService.getCurrentAuth();
+        var currentProfile = usersService.getCurrentProfile();
 
-        var pets = new ArrayList<>(petsService.findPetsSortByDistance(currentAuth.getAdoptionProfile(), limit, true));
+        var pets = new ArrayList<>(petsService.findPetsSortByDistance(currentProfile, limit, true));
 
         pets.sort((a, b) -> {
             //distâncias menores que 1000 metros são consideradas iguais, então ordenar por preferência
             if(a.getDistance() - b.getDistance() > 1000) return 0;
 
-            var preferredTypes = currentAuth.getAdoptionProfile().getPreferredPetTypes();
+            var preferredTypes = currentProfile.getPreferredPetTypes();
             var hasA = preferredTypes.contains(a.getType());
             var hasB = preferredTypes.contains(b.getType());
 
@@ -52,7 +54,7 @@ public class MatcherService {
         });
 
         // atualizar lista de viewed
-        pets.forEach(petWithDistance -> currentAuth.getAdoptionProfile().addViewedId(petWithDistance.getId()));
+        pets.forEach(petWithDistance -> currentProfile.addViewedId(petWithDistance.getId()));
 
         return pets.stream().map(petWithDistance -> new MatchingResultDTO(
                 petWithDistance.getId(),
@@ -73,7 +75,7 @@ public class MatcherService {
      */
     @Transactional
     public void clearViewedHistory(){
-        var currentProfile = usersService.getCurrentAuth().getAdoptionProfile();
+        var currentProfile = usersService.getCurrentProfile();
 
         currentProfile.clearViewedIds();
     }

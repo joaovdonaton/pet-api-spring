@@ -1,6 +1,5 @@
 package br.pucpr.petapi.rest.adoptionRequests.dto;
 
-import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class AdoptionRequestRegister {
+public class AdoptionRequestRegisterDTO {
     @NotNull
     private UUID petId;
     @NotEmpty

@@ -4,6 +4,7 @@ import br.pucpr.petapi.lib.error.InvalidCredentialsException;
 import br.pucpr.petapi.lib.error.InvalidUUIDException;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.roles.RolesService;
 import br.pucpr.petapi.lib.security.JWT;
 import br.pucpr.petapi.rest.users.dto.UserCredentialsDTO;
@@ -81,5 +82,18 @@ public class UsersService {
                 ((UserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
                         .getUsername()
         );
+    }
+
+    /**
+     * @return o perfil do usuário atualmente autenticado.
+     * Útil para verificar caso o usuário atualmente logado tem um profile.
+     */
+    public AdoptionProfile getCurrentProfile(){
+        var p = getCurrentAuth().getAdoptionProfile();
+
+        if(p == null)
+            throw new ResourceDoesNotExistException("User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
+
+        return p;
     }
 }

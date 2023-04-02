@@ -2,14 +2,18 @@ package br.pucpr.petapi.rest.adoptionRequests;
 
 import br.pucpr.petapi.lib.error.BadRequest;
 import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.error.UnauthorizedException;
-import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegister;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.pets.PetsService;
 import br.pucpr.petapi.rest.users.UsersService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class AdoptionRequestsService {
@@ -23,8 +27,14 @@ public class AdoptionRequestsService {
         this.usersService = usersService;
     }
 
+    public AdoptionRequest findById(UUID id){
+        return repository.findById(id).orElseThrow(
+                () -> new ResourceDoesNotExistException("Adoption request with ID ["+id+"] does not exist", HttpStatus.NOT_FOUND)
+        );
+    }
+
     @Transactional
-    public AdoptionRequest createAdoptionRequest(AdoptionRequestRegister register){
+    public AdoptionRequest createAdoptionRequest(AdoptionRequestRegisterDTO register){
         var currentUser = usersService.getCurrentAuth();
 
         var pet = petsService.findById(register.getPetId());
@@ -51,5 +61,18 @@ public class AdoptionRequestsService {
         ar.setStatus(Status.PENDING);
 
         return repository.save(ar);
+    }
+
+    @Transactional
+    public void updateStatus(AdoptionRequestStatusPatchDTO adoptionRequestStatusPatchDTO){
+        var currentUser = usersService.getCurrentAuth();
+        var request = findById(adoptionRequestStatusPatchDTO.getRequestId());
+
+        if(!currentUser.getId().equals(request.getUserReceiver().getId()))
+            throw new UnauthorizedException("User is not the receiver of this request");
+
+        request.setStatus(Status.valueOf(adoptionRequestStatusPatchDTO.getStatus()));
+
+        repository.save(request);
     }
 }
