@@ -5,13 +5,12 @@ import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
+import br.pucpr.petapi.rest.pets.Pet;
 import br.pucpr.petapi.rest.users.User;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -74,11 +73,11 @@ public class TestDataLoader {
             )
     );
 
-    public List<AdoptionRequest> generateAdoptionRequests(User sender, User receiver, int count){
-        var result = new ArrayList<AdoptionRequest>();
+    public Set<AdoptionRequest> generateAdoptionRequests(Pet pet, User sender, User receiver, int count){
+        var result = new HashSet<AdoptionRequest>();
         for(int i = 0; i < count; i++){
-            result.add(new AdoptionRequest(
-                    null, sender, receiver, "", "", getRandomRequestStatus()
+            result.add(new AdoptionRequest( UUID.randomUUID(),
+                    pet, sender, receiver, "", "", getRandomRequestStatus()
             ));
         }
         return result;

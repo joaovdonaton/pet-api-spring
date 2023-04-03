@@ -7,6 +7,7 @@ import br.pucpr.petapi.lib.error.UnauthorizedException;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsRepository;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsService;
+import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestInfoDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
 import br.pucpr.petapi.rest.adoptionRequests.enums.RequestType;
@@ -120,10 +121,40 @@ public class AdoptionRequestsServiceTest {
     public void shouldOnlyListOutgoingAcceptedRequests(){
         var user = Mockito.mock(User.class);
         when(usersService.getCurrentAuth()).thenReturn(user);
-//        when(user.getIncomingRequests()).thenReturn(testDataLoader.g);
 
-        testDataLoader.generateAdoptionRequests(user, null, 10).forEach(System.out::println);
+        var otherUser = Mockito.mock(User.class);
 
-        service.listRequests(Status.ACCEPTED, RequestType.OUTGOING);
+        var pet = Mockito.mock(Pet.class);
+        when(pet.getId()).thenReturn(UUID.randomUUID());
+
+        var requests = testDataLoader.generateAdoptionRequests(pet, user, otherUser, 10);
+        when(user.getOutgoingRequests()).thenReturn(requests);
+
+        var expectedRequestIds = requests.stream().filter(r -> r.getStatus() == Status.ACCEPTED)
+                .map(AdoptionRequest::getId).toList();
+
+        assertEquals(expectedRequestIds,
+                service.listRequests(Status.ACCEPTED, RequestType.OUTGOING).stream().map(AdoptionRequestInfoDTO::getId)
+                        .toList());
+    }
+
+    @Test
+    public void shouldListAllIncomingRequests(){
+        var user = Mockito.mock(User.class);
+        when(usersService.getCurrentAuth()).thenReturn(user);
+
+        var otherUser = Mockito.mock(User.class);
+
+        var pet = Mockito.mock(Pet.class);
+        when(pet.getId()).thenReturn(UUID.randomUUID());
+
+        var requests = testDataLoader.generateAdoptionRequests(pet, otherUser, user, 10);
+        when(user.getIncomingRequests()).thenReturn(requests);
+
+        var expectedRequestIds = requests.stream().map(AdoptionRequest::getId).toList();
+
+        assertEquals(expectedRequestIds,
+                service.listRequests(null, RequestType.INCOMING).stream().map(AdoptionRequestInfoDTO::getId)
+                        .toList());
     }
 }
