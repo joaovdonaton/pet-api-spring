@@ -9,6 +9,7 @@ import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsRepository;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsService;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;
+import br.pucpr.petapi.rest.adoptionRequests.enums.RequestType;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
 import br.pucpr.petapi.rest.pets.Pet;
 import br.pucpr.petapi.rest.pets.PetsService;
@@ -113,5 +114,16 @@ public class AdoptionRequestsServiceTest {
         assertThrows(UnauthorizedException.class, () -> service.updateStatus(
                 new AdoptionRequestStatusPatchDTO(UUID.randomUUID(), "PENDING")
         ));
+    }
+
+    @Test
+    public void shouldOnlyListOutgoingAcceptedRequests(){
+        var user = Mockito.mock(User.class);
+        when(usersService.getCurrentAuth()).thenReturn(user);
+//        when(user.getIncomingRequests()).thenReturn(testDataLoader.g);
+
+        testDataLoader.generateAdoptionRequests(user, null, 10).forEach(System.out::println);
+
+        service.listRequests(Status.ACCEPTED, RequestType.OUTGOING);
     }
 }
