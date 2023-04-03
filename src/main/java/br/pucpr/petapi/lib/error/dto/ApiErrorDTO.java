@@ -8,6 +8,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ApiErrorDTO {
+    private String message;
+    private String details;
     private List<String> errors;
 
     public ApiErrorDTO(String ... errors) {

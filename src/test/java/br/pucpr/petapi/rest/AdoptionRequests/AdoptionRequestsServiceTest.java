@@ -1,9 +1,9 @@
 package br.pucpr.petapi.rest.AdoptionRequests;
 
 import br.pucpr.petapi.TestDataLoader;
-import br.pucpr.petapi.lib.error.BadRequest;
-import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
-import br.pucpr.petapi.lib.error.UnauthorizedException;
+import br.pucpr.petapi.lib.error.exceptions.BadRequest;
+import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.exceptions.UnauthorizedException;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsRepository;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequestsService;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 import java.util.Set;

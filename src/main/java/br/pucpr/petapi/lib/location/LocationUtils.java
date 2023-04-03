@@ -1,9 +1,9 @@
 package br.pucpr.petapi.lib.location;
 
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
-import br.pucpr.petapi.lib.error.InvalidAddressException;
-import br.pucpr.petapi.lib.error.InvalidCEPException;
-import br.pucpr.petapi.lib.error.ThirdPartyApiFailureException;
+import br.pucpr.petapi.lib.error.exceptions.InvalidAddressException;
+import br.pucpr.petapi.lib.error.exceptions.InvalidCEPException;
+import br.pucpr.petapi.lib.error.exceptions.ThirdPartyApiFailureException;
 import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import br.pucpr.petapi.lib.location.dto.response.GeocodingResponse;
 import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;

@@ -1,6 +1,6 @@
 package br.pucpr.petapi.rest.petTypes;
 
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package br.pucpr.petapi.rest.pets;
 
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.lib.location.LocationUtils;

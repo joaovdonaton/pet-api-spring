@@ -1,7 +1,6 @@
-package br.pucpr.petapi.lib.error;
+package br.pucpr.petapi.lib.error.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 public class InvalidAddressException extends ApiException{
     public InvalidAddressException(String message, HttpStatus status) {

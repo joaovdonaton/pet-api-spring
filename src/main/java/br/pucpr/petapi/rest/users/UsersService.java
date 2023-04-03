@@ -1,9 +1,9 @@
 package br.pucpr.petapi.rest.users;
 
-import br.pucpr.petapi.lib.error.InvalidCredentialsException;
-import br.pucpr.petapi.lib.error.InvalidUUIDException;
-import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.InvalidCredentialsException;
+import br.pucpr.petapi.lib.error.exceptions.InvalidUUIDException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.roles.RolesService;
 import br.pucpr.petapi.lib.security.JWT;

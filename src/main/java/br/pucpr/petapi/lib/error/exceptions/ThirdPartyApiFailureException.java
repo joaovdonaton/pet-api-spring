@@ -1,4 +1,4 @@
-package br.pucpr.petapi.lib.error;
+package br.pucpr.petapi.lib.error.exceptions;
 
 import org.springframework.http.HttpStatus;
 

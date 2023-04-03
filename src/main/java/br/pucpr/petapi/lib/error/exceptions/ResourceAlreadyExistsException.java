@@ -1,7 +1,6 @@
-package br.pucpr.petapi.lib.error;
+package br.pucpr.petapi.lib.error.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 public class ResourceAlreadyExistsException extends ApiException{
     public ResourceAlreadyExistsException(String message, HttpStatus status) {

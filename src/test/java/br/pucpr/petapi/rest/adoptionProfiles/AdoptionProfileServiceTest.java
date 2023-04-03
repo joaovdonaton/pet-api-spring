@@ -1,7 +1,7 @@
 package br.pucpr.petapi.rest.adoptionProfiles;
 
 import br.pucpr.petapi.TestDataLoader;
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import br.pucpr.petapi.rest.users.User;

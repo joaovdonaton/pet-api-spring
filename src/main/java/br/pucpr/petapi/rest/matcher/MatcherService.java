@@ -1,13 +1,11 @@
 package br.pucpr.petapi.rest.matcher;
 
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
 import br.pucpr.petapi.rest.matcher.dto.MatchingResultDTO;
 import br.pucpr.petapi.rest.petTypes.PetTypeService;
 import br.pucpr.petapi.rest.pets.PetsService;
 import br.pucpr.petapi.rest.users.UsersService;
 import jakarta.transaction.Transactional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

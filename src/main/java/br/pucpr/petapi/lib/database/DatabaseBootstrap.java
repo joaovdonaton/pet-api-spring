@@ -1,5 +1,6 @@
 package br.pucpr.petapi.lib.database;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileRepository;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
@@ -46,8 +47,9 @@ public class DatabaseBootstrap implements CommandLineRunner {
     private final AdoptionProfileRepository adoptionProfileRepository;
     private final AdoptionProfileService adoptionProfileService;
     private final AdoptionRequestsRepository adoptionRequestsRepository;
+    private final MessageSettings messageSettings;
 
-    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService, AdoptionRequestsRepository adoptionRequestsRepository) {
+    public DatabaseBootstrap(RolesRepository rolesRepository, UsersRepository usersRepository, PetTypeRepository petTypeRepository, PasswordEncoder encoder, LocationUtils locationUtils, UsersService usersService, PetsRepository petsRepository, BootstrapSettings settings, PetTypeService petTypeService, PetsService petsService, AdoptionProfileRepository adoptionProfileRepository, AdoptionProfileService adoptionProfileService, AdoptionRequestsRepository adoptionRequestsRepository, MessageSettings messageSettings) {
         this.rolesRepository = rolesRepository;
         this.usersRepository = usersRepository;
         this.petTypeRepository = petTypeRepository;
@@ -61,6 +63,7 @@ public class DatabaseBootstrap implements CommandLineRunner {
         this.adoptionProfileRepository = adoptionProfileRepository;
         this.adoptionProfileService = adoptionProfileService;
         this.adoptionRequestsRepository = adoptionRequestsRepository;
+        this.messageSettings = messageSettings;
     }
 
     @Transactional

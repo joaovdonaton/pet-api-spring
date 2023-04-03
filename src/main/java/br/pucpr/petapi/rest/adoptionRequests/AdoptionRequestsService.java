@@ -1,9 +1,9 @@
 package br.pucpr.petapi.rest.adoptionRequests;
 
-import br.pucpr.petapi.lib.error.BadRequest;
-import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
-import br.pucpr.petapi.lib.error.UnauthorizedException;
+import br.pucpr.petapi.lib.error.exceptions.BadRequest;
+import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.UnauthorizedException;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestInfoDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestRegisterDTO;
 import br.pucpr.petapi.rest.adoptionRequests.dto.AdoptionRequestStatusPatchDTO;

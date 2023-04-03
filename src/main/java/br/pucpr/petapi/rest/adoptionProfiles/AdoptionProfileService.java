@@ -1,10 +1,11 @@
 package br.pucpr.petapi.rest.adoptionProfiles;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileRegisterDTO;
 import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
 import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileWithDistanceDTO;
-import br.pucpr.petapi.lib.error.ResourceAlreadyExistsException;
-import br.pucpr.petapi.lib.error.ResourceDoesNotExistException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
+import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.rest.users.User;
 import br.pucpr.petapi.rest.users.UsersService;
