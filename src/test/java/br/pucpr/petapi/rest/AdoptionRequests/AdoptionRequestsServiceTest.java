@@ -2,7 +2,7 @@ package br.pucpr.petapi.rest.AdoptionRequests;
 
 import br.pucpr.petapi.TestDataLoader;
 import br.pucpr.petapi.lib.error.MessageSettings;
-import br.pucpr.petapi.lib.error.exceptions.BadRequest;
+import br.pucpr.petapi.lib.error.exceptions.BadRequestException;
 import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.exceptions.UnauthorizedException;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
@@ -91,7 +91,7 @@ public class AdoptionRequestsServiceTest {
         when(userReceiver.getId()).thenReturn(id);
         when(pet.getUser()).thenReturn(userReceiver);
 
-        assertThrows(BadRequest.class, () ->
+        assertThrows(BadRequestException.class, () ->
             service.createAdoptionRequest(new AdoptionRequestRegisterDTO(
                     pet.getId(),
                     "A".repeat(20),

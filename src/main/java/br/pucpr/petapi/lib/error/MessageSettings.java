@@ -20,4 +20,7 @@ public class MessageSettings {
     private String thirdPartyApiFailure = "";
     private String invalidAddress = "";
     private String invalidCep = "";
+    private String badRequest = "";
+    private String unauthorized = "";
+    private String invalidCredentials = "";
 }

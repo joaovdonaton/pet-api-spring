@@ -1,7 +1,7 @@
 package br.pucpr.petapi.rest.adoptionRequests;
 
 import br.pucpr.petapi.lib.error.MessageSettings;
-import br.pucpr.petapi.lib.error.exceptions.BadRequest;
+import br.pucpr.petapi.lib.error.exceptions.BadRequestException;
 import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.error.exceptions.UnauthorizedException;
@@ -50,7 +50,8 @@ public class AdoptionRequestsService {
         var receiver = pet.getUser();
 
         if(currentUser.getId().equals(receiver.getId()))
-            throw new BadRequest("Cannot send request: user owns the pet with ID ["+pet.getId()+"]");
+            throw new BadRequestException(messageSettings.getBadRequest(),
+                    "Cannot send request: user owns the pet with ID ["+pet.getId()+"]");
 
         for(AdoptionRequest ar: pet.getAdoptionRequests()){
             if(ar.getUserSender().getId().equals(currentUser.getId())){
@@ -79,7 +80,8 @@ public class AdoptionRequestsService {
         var request = findById((adoptionRequestStatusPatchDTO.getRequestId()));
 
         if(!currentUser.getId().equals(request.getUserReceiver().getId()))
-            throw new UnauthorizedException("User is not the receiver of this request");
+            throw new UnauthorizedException(messageSettings.getUnauthorized(),
+                    "User is not the receiver of this request");
 
         request.setStatus(Status.valueOf(adoptionRequestStatusPatchDTO.getStatus()));
 

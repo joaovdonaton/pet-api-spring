@@ -67,11 +67,11 @@ public class UsersService {
 
     public String authenticate(UserCredentialsDTO userCredentialsDTO) {
         var u = repository.findByUsername(userCredentialsDTO.getUsername()).orElseThrow(
-                () -> new InvalidCredentialsException("Invalid Credentials", HttpStatus.UNAUTHORIZED)
+                () -> new InvalidCredentialsException(messageSettings.getInvalidCredentials(), HttpStatus.UNAUTHORIZED)
         );
 
         if(!encoder.matches(userCredentialsDTO.getPassword(), u.getPassword()))
-            throw new InvalidCredentialsException("Invalid Credentials", HttpStatus.UNAUTHORIZED);
+            throw new InvalidCredentialsException(messageSettings.getInvalidCredentials(), HttpStatus.UNAUTHORIZED);
 
         return jwt.createToken(extractUserInfo(u));
     }
