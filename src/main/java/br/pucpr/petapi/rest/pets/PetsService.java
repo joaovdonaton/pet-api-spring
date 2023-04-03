@@ -69,7 +69,7 @@ public class PetsService {
 
     public List<PetWithDistance> searchPet(int limit, int page, String sortBy, String ascDesc){
         if(sortBy.equals("distance")){
-            var pets = findPetsSortByDistance(usersService.getCurrentAuth().getAdoptionProfile(), limit*(page+1), false);
+            var pets = findPetsSortByDistance(usersService.getCurrentProfile(), limit*(page+1), false);
             return pets.stream().skip(page*limit).limit(limit).toList();
         }
         else {
