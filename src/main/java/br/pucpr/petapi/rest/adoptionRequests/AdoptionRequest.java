@@ -45,8 +45,8 @@ public class AdoptionRequest {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "request from " +userSender.getUsername()+ " to " + userReceiver.getUsername();
-    }
+//    @Override
+//    public String toString() {
+//        return "request from " +userSender.getUsername()+ " to " + userReceiver.getUsername();
+//    }
 }

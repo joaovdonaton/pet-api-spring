@@ -96,7 +96,7 @@ public class AdoptionRequestsService {
 
         return requestsStream.map(ar ->
                 new AdoptionRequestInfoDTO(ar.getId(), ar.getPet().getId(), ar.getUserSender().getId(),
-                        ar.getTitle(), ar.getMessage(), ar.getStatus())
+                        ar.getUserReceiver().getId(), ar.getTitle(), ar.getMessage(), ar.getStatus())
         ).toList();
     }
 }

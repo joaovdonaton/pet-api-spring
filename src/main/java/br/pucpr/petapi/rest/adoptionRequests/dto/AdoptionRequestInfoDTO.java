@@ -16,6 +16,7 @@ public class AdoptionRequestInfoDTO {
     private UUID id;
     private UUID petId;
     private UUID senderId;
+    private UUID receiverId;
     private String title;
     private String message;
     private Status status;

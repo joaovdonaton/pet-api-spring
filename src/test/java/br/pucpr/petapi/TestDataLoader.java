@@ -3,10 +3,14 @@ package br.pucpr.petapi;
 import br.pucpr.petapi.lib.location.dto.response.CEPDataResponse;
 import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
+import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
+import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
+import br.pucpr.petapi.rest.pets.Pet;
+import br.pucpr.petapi.rest.users.User;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -68,4 +72,23 @@ public class TestDataLoader {
                     null
             )
     );
+
+    public Set<AdoptionRequest> generateAdoptionRequests(Pet pet, User sender, User receiver, int count){
+        var result = new HashSet<AdoptionRequest>();
+        for(int i = 0; i < count; i++){
+            result.add(new AdoptionRequest( UUID.randomUUID(),
+                    pet, sender, receiver, "", "", getRandomRequestStatus()
+            ));
+        }
+        return result;
+    }
+
+    private Status getRandomRequestStatus(){
+        return switch(new Random().nextInt(0, 3)){
+            case 0 -> Status.PENDING;
+            case 1 -> Status.ACCEPTED;
+            case 2 -> Status.REJECTED;
+            default -> throw new IllegalStateException("Unexpected value from random number generator");
+        };
+    }
 }
