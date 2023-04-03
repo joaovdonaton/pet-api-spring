@@ -1,6 +1,7 @@
 package br.pucpr.petapi.rest.adoptionProfiles;
 
 import br.pucpr.petapi.TestDataLoader;
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.lib.location.LocationUtils;
 import br.pucpr.petapi.rest.adoptionProfiles.dto.AdoptionProfileUpdateDTO;
@@ -29,10 +30,11 @@ public class AdoptionProfileServiceTest {
     @Mock
     private AdoptionProfileRepository adoptionProfileRepository;
     private final TestDataLoader testDataLoader = new TestDataLoader();
+    private final MessageSettings messageSettings = new MessageSettings();
 
     @BeforeEach
     public void setup(){
-        service = new AdoptionProfileService(usersService, locationUtils, adoptionProfileRepository);
+        service = new AdoptionProfileService(usersService, locationUtils, adoptionProfileRepository, messageSettings);
     }
 
     @Test

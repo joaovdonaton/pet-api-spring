@@ -1,5 +1,6 @@
 package br.pucpr.petapi.rest.adoptionRequests;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.lib.error.exceptions.BadRequest;
 import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
@@ -25,16 +26,19 @@ public class AdoptionRequestsService {
     private final AdoptionRequestsRepository repository;
     private final PetsService petsService;
     private final UsersService usersService;
+    private final MessageSettings messageSettings;
 
-    public AdoptionRequestsService(AdoptionRequestsRepository repository, PetsService petsService, UsersService usersService) {
+    public AdoptionRequestsService(AdoptionRequestsRepository repository, PetsService petsService, UsersService usersService, MessageSettings messageSettings) {
         this.repository = repository;
         this.petsService = petsService;
         this.usersService = usersService;
+        this.messageSettings = messageSettings;
     }
 
     public AdoptionRequest findById(UUID id){
         return repository.findById(id).orElseThrow(
-                () -> new ResourceDoesNotExistException("Adoption request with ID ["+id+"] does not exist", HttpStatus.NOT_FOUND)
+                () -> new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                        "Adoption request with ID ["+id+"] does not exist", HttpStatus.NOT_FOUND)
         );
     }
 
@@ -50,7 +54,8 @@ public class AdoptionRequestsService {
 
         for(AdoptionRequest ar: pet.getAdoptionRequests()){
             if(ar.getUserSender().getId().equals(currentUser.getId())){
-                throw new ResourceAlreadyExistsException("Cannot send request: user has already sent a request to pet ID [" + pet.getId() + "]", HttpStatus.BAD_REQUEST);
+                throw new ResourceAlreadyExistsException(messageSettings.getResourceAlreadyExists(),
+                        "Cannot send request: user has already sent a request to pet ID [" + pet.getId() + "]", HttpStatus.BAD_REQUEST);
             }
         }
 

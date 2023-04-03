@@ -1,5 +1,6 @@
 package br.pucpr.petapi.rest.pets;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.lib.error.exceptions.ResourceDoesNotExistException;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfileService;
@@ -28,13 +29,15 @@ public class PetsService {
     private final PetTypeService petTypeService;
     private final AdoptionProfileService adoptionProfileService;
     private final LocationUtils locationUtils;
+    private final MessageSettings messageSettings;
 
-    public PetsService(PetsRepository repository, UsersService usersService, PetTypeService petTypeService, AdoptionProfileService adoptionProfileService, LocationUtils locationUtils) {
+    public PetsService(PetsRepository repository, UsersService usersService, PetTypeService petTypeService, AdoptionProfileService adoptionProfileService, LocationUtils locationUtils, MessageSettings messageSettings) {
         this.repository = repository;
         this.usersService = usersService;
         this.petTypeService = petTypeService;
         this.adoptionProfileService = adoptionProfileService;
         this.locationUtils = locationUtils;
+        this.messageSettings = messageSettings;
     }
 
     public boolean existsByName(String name){
@@ -43,7 +46,8 @@ public class PetsService {
 
     public Pet findById(UUID id){
         return repository.findById(id).orElseThrow(() ->
-                new ResourceDoesNotExistException("Pet with ID ["+id+"] does not exist.", HttpStatus.NOT_FOUND));
+                new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                        "Pet with ID ["+id+"] does not exist.", HttpStatus.NOT_FOUND));
     }
 
     public Pet createPet(PetRegisterDTO petRegisterDTO) {

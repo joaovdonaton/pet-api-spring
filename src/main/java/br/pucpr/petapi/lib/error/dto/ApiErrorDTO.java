@@ -12,6 +12,6 @@ public class ApiErrorDTO {
     private String details;
     private List<String> errors;
 
-    public ApiErrorDTO(String ... errors) {
-        this.errors = List.of(errors);
+    public ApiErrorDTO(List<String> errors) {
+        this.errors = errors;
     }}

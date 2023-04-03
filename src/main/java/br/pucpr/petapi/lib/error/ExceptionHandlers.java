@@ -43,11 +43,6 @@ public class ExceptionHandlers {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorDTO> apiException(ApiException e){
-        return new ResponseEntity<>(new ApiErrorDTO("", "", e.getMessage()), e.getStatus());
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ApiErrorDTO> invalidCredentials(InvalidCredentialsException e){
-        return new ResponseEntity<>(new ApiErrorDTO("", "", e.getMessage()), UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiErrorDTO(e.getMessage(), e.getDetails(), List.of()), e.getStatus());
     }
 }

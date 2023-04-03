@@ -27,11 +27,13 @@ public class AdoptionProfileService {
     private final UsersService usersService;
     private final LocationUtils locationUtils;
     private final AdoptionProfileRepository repository;
+    private final MessageSettings messageSettings;
 
-    public AdoptionProfileService(UsersService usersService, LocationUtils locationUtils, AdoptionProfileRepository repository) {
+    public AdoptionProfileService(UsersService usersService, LocationUtils locationUtils, AdoptionProfileRepository repository, MessageSettings messageSettings) {
         this.usersService = usersService;
         this.locationUtils = locationUtils;
         this.repository = repository;
+        this.messageSettings = messageSettings;
     }
 
     public AdoptionProfile createAdoptionProfile(AdoptionProfileRegisterDTO adoptionProfileRegisterDTO){
@@ -39,7 +41,8 @@ public class AdoptionProfileService {
         User currentUser = usersService.findById(currentUserInfo.getId());
 
         if(currentUser.getAdoptionProfile() != null)
-            throw new ResourceAlreadyExistsException(currentUser.getUsername() + " already has an adoption profile.",
+            throw new ResourceAlreadyExistsException(messageSettings.getResourceDoesNotExist(),
+                    currentUser.getUsername() + " already has an adoption profile.",
                     HttpStatus.BAD_REQUEST);
 
         AdoptionProfile ap = new AdoptionProfile(
@@ -62,7 +65,8 @@ public class AdoptionProfileService {
 
         AdoptionProfile ap = currentUser.getAdoptionProfile();
 
-        if(ap == null) throw new ResourceDoesNotExistException("User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
+        if(ap == null) throw new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                "User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
 
         repository.delete(ap);
     }
@@ -73,7 +77,8 @@ public class AdoptionProfileService {
         AdoptionProfile ap = currentUser.getAdoptionProfile();
 
         if(ap == null)
-            throw new ResourceDoesNotExistException(currentUser.getUsername() + " does not have an adoption profile.",
+            throw new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                    currentUser.getUsername() + " does not have an adoption profile.",
                     HttpStatus.NOT_FOUND);
 
         String cep = adoptionProfileUpdateDTO.getCep();
@@ -123,8 +128,8 @@ public class AdoptionProfileService {
         var profile = u.getAdoptionProfile();
 
         if(profile == null){
-            throw new ResourceDoesNotExistException(
-                    "User ["+u.getUsername()+"] does not have a profile.",
+            throw new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                    u.getUsername() + " does not have an adoption profile.",
                     HttpStatus.NOT_FOUND);
         }
 

@@ -1,5 +1,6 @@
 package br.pucpr.petapi.rest.users;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.lib.error.exceptions.InvalidCredentialsException;
 import br.pucpr.petapi.lib.error.exceptions.InvalidUUIDException;
 import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
@@ -24,13 +25,15 @@ public class UsersService {
     private PasswordEncoder encoder;
     private final RolesService rolesService;
     private JWT jwt;
+    private final MessageSettings messageSettings;
 
     public UsersService(UsersRepository repository, PasswordEncoder encoder,
-                        RolesService rolesService, JWT jwt) {
+                        RolesService rolesService, JWT jwt, MessageSettings messageSettings) {
         this.repository = repository;
         this.encoder = encoder;
         this.rolesService = rolesService;
         this.jwt = jwt;
+        this.messageSettings = messageSettings;
     }
 
     public User findById(UUID id){
@@ -39,14 +42,18 @@ public class UsersService {
     }
 
     public User findByUsername(String username){
-        return repository.findByUsername(username).orElseThrow(() -> new ResourceDoesNotExistException("Username ["+username+"] not found",
+        return repository.findByUsername(username).orElseThrow(() -> new ResourceDoesNotExistException(
+                messageSettings.getResourceDoesNotExist(),
+                "Username ["+username+"] not found",
                 HttpStatus.NOT_FOUND));
     }
 
     @Transactional
     public User createUser(UserRegisterDTO userRegisterDTO){
         if(repository.existsByUsername(userRegisterDTO.getUsername()))
-            throw new ResourceAlreadyExistsException("Username ["+userRegisterDTO.getUsername()+"] is already in use.",
+            throw new ResourceAlreadyExistsException(
+                    messageSettings.getResourceAlreadyExists(),
+                    "Username ["+userRegisterDTO.getUsername()+"] is already in use.",
                     HttpStatus.BAD_REQUEST);
 
         User u = new User(userRegisterDTO.getUsername(),
@@ -92,7 +99,8 @@ public class UsersService {
         var p = getCurrentAuth().getAdoptionProfile();
 
         if(p == null)
-            throw new ResourceDoesNotExistException("User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
+            throw new ResourceDoesNotExistException(messageSettings.getResourceDoesNotExist(),
+                    "User does not have an AdoptionProfile", HttpStatus.NOT_FOUND);
 
         return p;
     }

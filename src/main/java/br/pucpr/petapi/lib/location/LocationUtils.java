@@ -1,5 +1,6 @@
 package br.pucpr.petapi.lib.location;
 
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.lib.error.exceptions.InvalidAddressException;
 import br.pucpr.petapi.lib.error.exceptions.InvalidCEPException;
@@ -23,10 +24,12 @@ public class LocationUtils {
     private final String PLACEHOLDER_ADDRESS = "ADDRESS";
     private final String PLACEHOLDER_KEY = "KEY";
     private final Logger logger = LoggerFactory.getLogger(LocationUtils.class);
+    private final MessageSettings messageSettings;
 
-    public LocationUtils(LocationSettings locationSettings, ApiKeysSettings apiKeysSettings) {
+    public LocationUtils(LocationSettings locationSettings, ApiKeysSettings apiKeysSettings, MessageSettings messageSettings) {
         this.locationSettings = locationSettings;
         this.apiKeysSettings = apiKeysSettings;
+        this.messageSettings = messageSettings;
     }
 
     public CEPDataResponse getCEPData(String cep){
@@ -37,13 +40,13 @@ public class LocationUtils {
 
         if(res == null){
             logger.error("Error while fetching CEP data!");
-            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api",
+            throw new ThirdPartyApiFailureException(messageSettings.getThirdPartyApiFailure(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(res.getCep() == null){
             logger.error("No results found for CEP: " + cep);
-            throw new InvalidCEPException("Could not retrieve CEP data: Invalid CEP", HttpStatus.BAD_REQUEST);
+            throw new InvalidCEPException(messageSettings.getInvalidCep(), HttpStatus.BAD_REQUEST);
         }
 
         return res;
@@ -59,13 +62,13 @@ public class LocationUtils {
 
         if(res.getBody() == null){
             logger.error("Error while fetching coordinate data!");
-            throw new ThirdPartyApiFailureException("Error while trying to fetch data from third party api",
+            throw new ThirdPartyApiFailureException(messageSettings.getThirdPartyApiFailure(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         if(res.getStatusCode().toString().equals(GeocodingResponse.NO_RESULTS_STATUS)){
             logger.error("No results returned for coordinate data");
-            throw new InvalidAddressException("Could not get coordinates for this address.", HttpStatus.BAD_REQUEST);
+            throw new InvalidAddressException(messageSettings.getInvalidAddress(), HttpStatus.BAD_REQUEST);
         }
 
         return res.getBody().getResults().get(0).getGeometry().getLocation();

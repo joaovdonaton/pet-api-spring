@@ -14,6 +14,10 @@ import org.springframework.context.annotation.PropertySource;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageSettings {
-    private String resourceDoesNotExist;
-    private String validationFailure;
+    private String resourceDoesNotExist = "";
+    private String resourceAlreadyExists = "";
+    private String validationFailure = "";
+    private String thirdPartyApiFailure = "";
+    private String invalidAddress = "";
+    private String invalidCep = "";
 }

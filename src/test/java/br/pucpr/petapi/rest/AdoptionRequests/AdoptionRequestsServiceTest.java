@@ -1,6 +1,7 @@
 package br.pucpr.petapi.rest.AdoptionRequests;
 
 import br.pucpr.petapi.TestDataLoader;
+import br.pucpr.petapi.lib.error.MessageSettings;
 import br.pucpr.petapi.lib.error.exceptions.BadRequest;
 import br.pucpr.petapi.lib.error.exceptions.ResourceAlreadyExistsException;
 import br.pucpr.petapi.lib.error.exceptions.UnauthorizedException;
@@ -41,10 +42,11 @@ public class AdoptionRequestsServiceTest {
     @Mock
     private UsersService usersService;
     private final TestDataLoader testDataLoader = new TestDataLoader();
+    private final MessageSettings messageSettings = new MessageSettings();
 
     @BeforeEach
     public void setup(){
-        service = new AdoptionRequestsService(adoptionRequestsRepository, petsService, usersService);
+        service = new AdoptionRequestsService(adoptionRequestsRepository, petsService, usersService, messageSettings);
     }
 
     @Test
