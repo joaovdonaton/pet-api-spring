@@ -54,18 +54,7 @@ public class MatcherService {
         // atualizar lista de viewed
         pets.forEach(petWithDistance -> currentProfile.addViewedId(petWithDistance.getId()));
 
-        return pets.stream().map(petWithDistance -> new MatchingResultDTO(
-                petWithDistance.getId(),
-                petWithDistance.getName(),
-                petWithDistance.getNickname(),
-                petWithDistance.getAge(),
-                petWithDistance.getDescription(),
-                petWithDistance.getType(),
-                petWithDistance.getUser().getUsername(),
-                petWithDistance.getUser().getAdoptionProfile().getCity(),
-                petWithDistance.getUser().getAdoptionProfile().getState(),
-                petWithDistance.getDistance()
-        )).toList();
+        return pets.stream().map(MatchingResultDTO::fromPetWithDistance).toList();
     }
 
     /**

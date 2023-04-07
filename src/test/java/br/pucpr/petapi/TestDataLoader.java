@@ -5,7 +5,10 @@ import br.pucpr.petapi.lib.location.dto.response.geocoding.CoordinatesDTO;
 import br.pucpr.petapi.rest.adoptionProfiles.AdoptionProfile;
 import br.pucpr.petapi.rest.adoptionRequests.AdoptionRequest;
 import br.pucpr.petapi.rest.adoptionRequests.enums.Status;
+import br.pucpr.petapi.rest.petTypes.PetType;
 import br.pucpr.petapi.rest.pets.Pet;
+import br.pucpr.petapi.rest.pets.PetsService;
+import br.pucpr.petapi.rest.pets.dto.PetWithDistance;
 import br.pucpr.petapi.rest.users.User;
 import lombok.Data;
 
@@ -16,6 +19,7 @@ import java.util.*;
 /**
  * Dados dessa classe estão organizados pelo índice.
  * e.g os dados do índice 0 do cepDataResponses complementa o do índice 0 do coordinatesDTOs
+ * AVISO: os dados já existentes NÃO DEVEM ser alterados, pois vão quebrar certos testes. Apenas adicionar novos.
  */
 @Data
 public class TestDataLoader {
@@ -71,6 +75,36 @@ public class TestDataLoader {
                     null,
                     null
             )
+    );
+
+    private final List<Pet> pets = List.of(
+            new Pet("Jimmy",
+                    "Jim",
+                    15,
+                    "",
+                    new User("", "", ""),
+                    null,
+                    new PetType("cat")),
+            new Pet("Timmy",
+                    "Tim",
+                    9,
+                    "",
+                    new User("", "", ""),
+                    null,
+                    new PetType("dog")),
+            new Pet("Limmy",
+                    "Lim",
+                    1,
+                    "",
+                    new User("", "", ""),
+                    null,
+                    new PetType("cat"))
+    );
+
+    private final List<PetWithDistance> petsWithDistance = List.of(
+        PetWithDistance.fromPet(pets.get(0), 5000),
+        PetWithDistance.fromPet(pets.get(1), 5500),
+        PetWithDistance.fromPet(pets.get(2), 24000)
     );
 
     public Set<AdoptionRequest> generateAdoptionRequests(Pet pet, User sender, User receiver, int count){

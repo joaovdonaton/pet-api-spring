@@ -46,6 +46,7 @@ public class AdoptionProfile {
     @Column(precision = 15, scale = 12)
     private BigDecimal longitude;
     @ElementCollection
+    @JsonIgnore
     private Set<UUID> viewedPetIds;
     @ElementCollection
     private Set<String> preferredPetTypes;

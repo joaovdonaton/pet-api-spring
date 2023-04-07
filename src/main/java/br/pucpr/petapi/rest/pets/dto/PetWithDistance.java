@@ -21,11 +21,6 @@ public class PetWithDistance {
     private User user;
     private int distance;
 
-    @Override
-    public String toString() {
-        return "distance to " + getName() +" =   "+ distance + "meters";
-    }
-
     public static PetWithDistance fromPet(Pet p, int distance){
         return new PetWithDistance(p.getId(), p.getName(), p.getNickname(), p.getAge(), p.getDescription(), p.getPetType().getName(),
                 p.getUser(), distance);
