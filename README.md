@@ -2,7 +2,17 @@
 
 <b>Alunos:</b> João Vitor Donaton <br>
 <b>Professor:</b> Vinicius Godoy <br>
-<b>[Link da Apresentação](https://docs.google.com/presentation/d/13cT0ZHaYo5hq0otKDznQIyC0bLPGd1kjzCT8pPLYeIM/edit?usp=sharing)</b> <br>
+<b>[Link para o Vídeo](https://www.youtube.com/watch?v=cU351oYpKuI)</b> <br>
+<b>[Link do Powerpoint](https://docs.google.com/presentation/d/13cT0ZHaYo5hq0otKDznQIyC0bLPGd1kjzCT8pPLYeIM/edit?usp=sharing)</b> <br>
+
+### **Instruções Para Compilar:**
+ - Clonar repositório 
+ - Criar arquivo apikeys.properties no <i>src/main/resources</i>, com a propriedaade ```keys.googleApi``` (chave para acessar API de geocoding do google)
+ - Configurar base de dados (MySQL) através do application.properties.
+   - spring.datasource.url=URL_DA_DB
+   - spring.datasource.username=USERNAME
+   - spring.datasource.password=PASSWORD
+ - Utilize o comando ```./mvnw spring-boot:run``` ou use o Intellij para compilar e rodar
 
 ### **Configurações:**
 
