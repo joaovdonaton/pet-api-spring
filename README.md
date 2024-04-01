@@ -1,4 +1,4 @@
-# Backend API for Pet Adoption APP (Version 2.0)
+# Backend API for Pet Adoption App (Version 2.0)
 
 <b>Students:</b> João Vitor Donaton <br>
 <b>Instructor:</b> Vinicius Godoy <br>
