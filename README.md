@@ -1,42 +1,42 @@
-# API de Sistema de Adoção de Pets (Versão 2.0)
+# Backend API for Pet Adoption APP (Version 2.0)
 
-<b>Alunos:</b> João Vitor Donaton <br>
-<b>Professor:</b> Vinicius Godoy <br>
-<b>[Link para o Vídeo](https://www.youtube.com/watch?v=cU351oYpKuI)</b> <br>
-<b>[Link do Powerpoint](https://docs.google.com/presentation/d/13cT0ZHaYo5hq0otKDznQIyC0bLPGd1kjzCT8pPLYeIM/edit?usp=sharing)</b> <br>
+<b>Students:</b> João Vitor Donaton <br>
+<b>Instructor:</b> Vinicius Godoy <br>
+<b>[Link to presentation video (PORTUGUESE)](https://www.youtube.com/watch?v=cU351oYpKuI)</b> <br>
+<b>[Link to powerpoint presentation (PORTUGUESE)](https://docs.google.com/presentation/d/13cT0ZHaYo5hq0otKDznQIyC0bLPGd1kjzCT8pPLYeIM/edit?usp=sharing)</b> <br>
 
-### **Instruções Para Compilar:**
- - Clonar repositório 
- - Criar arquivo apikeys.properties no <i>src/main/resources</i>, com a propriedaade ```keys.googleApi``` (chave para acessar API de geocoding do google)
- - Configurar base de dados (MySQL) através do application.properties.
-   - spring.datasource.url=URL_DA_DB
+### **Compilation Instructions:**
+ - Clone repository  
+ - Create file named apikeys.properties in <i>src/main/resources</i>, with the property ```keys.googleApi``` (key to access google Geocoding API)
+ - Configure database (MySQL) through application.properties.
+   - spring.datasource.url=DATABASE_URL
    - spring.datasource.username=USERNAME
    - spring.datasource.password=PASSWORD
- - Utilize o comando ```./mvnw spring-boot:run``` ou use o Intellij para compilar e rodar
+ - Use the command ```./mvnw spring-boot:run``` or use Intellij to compile and run
 
-### **Configurações:**
+### **Configurations:**
 
-- <i>apikeys.properties</i> (não está no git)
-  - Propriedade keys.google-api (chave da api do google para consultar dados de localização)
+- <i>apikeys.properties</i> (not in git)
+  - Property: keys.google-api (google API key to query location data)
 - <i>bootstrapdata.properties</i>
-    - Contêm os dados para fazer o bootstrapping da base de dados
-    - Detalhes adicionais no <i>BootstrapSettings.java</i>
+    - Data for database bootstrapping
+    - Details in <i>BootstrapSettings.java</i>
 - <i>location.properties</i>
-  - URLs de apis de terceiros para consultar dados de localização
-  - O <i>LocationUtils.java</i> faz a substituição dos dados "placeholder" (ADDRESS, KEY e o CEP)
+  - Third party API URLs
+  - <i>LocationUtils.java</i> replaces placeholder data (ADDRESS, KEY e o CEP)
 - <i>messages.properties</i>
-  - Mensagens de erro padronizadas para retornar nos requests
+  - Standardized error messages to return in case of exceptions
 - <i>security.properties</i>
-  - Secret e Issuer para gerar e validar tokens JWT
+  - Secret e Issuer to generate JWT tokens
 
-### **A API conta com endpoints para:**
+### **The API features endpoints for:**
 
-- Gerenciamento de contas e autenticação
-- Registro de perfil com dados de localização (através da API de geocoding do google, e a API viacep) e preferência para adoção
-- Cadastro de pets
-- Sistema de "matching" para encontrar pets que se encaixam no perfil do usuário.
-- Envio e gerenciamento de pedidos de adoção para os pets
-- Alguns endpoints foram removidos na nova versão (Escolhi focar em outros detalhes, já que implementar esses endpoints seria basicamente mais do mesmo de criar entidades e relações)
-  - ~~Criação de organizações de usuários, ONGs ou governamentais~~
-  - ~~Criação de campanhas para arrecadação de dinheiro/recursos e adoção~~
-  - ~~Postagem de blogposts da campanha~~
+- Account management and authentication
+- Creation of profiles with location data (google geocoding API and viacep API) and adoption preferences
+- Pet enrollment and management
+- Matching system to find pets that fit the users profile
+- Sending and management of adoption requests for pets
+- Some endpoints were removed in version 2.0 (I chose to focus on other features, as implementing these endpoints is basically just doing more of the same)
+  - ~~Creation of NGOs, government organizations and user organizations~~~
+  - ~~Creation of adoption campaigns~~
+  - ~~Adoption campaign blogposts~~
